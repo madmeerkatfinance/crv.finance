@@ -13,38 +13,39 @@ import { AuthereumConnector } from "@web3-react/authereum-connector";
 
 const POLLING_INTERVAL = 12000;
 const RPC_URLS = {
-  1: "https://eth-mainnet.alchemyapi.io/v2/k2--UT_xVVXMOvAyoxJYqtKhlmyBbqnX",
-  4: "https://rinkeby.infura.io/v3/bd80ce1ca1f94da48e151bb6868bb150"
+  // 1: "https://eth-mainnet.alchemyapi.io/v2/k2--UT_xVVXMOvAyoxJYqtKhlmyBbqnX",
+  // 4: "https://rinkeby.infura.io/v3/bd80ce1ca1f94da48e151bb6868bb150"
+  25: "https://rpc.nebkas.ro/",
 };
 
 export const injected = new InjectedConnector({
-  supportedChainIds: [1, 3, 4, 5, 42]
+  supportedChainIds: [25],
 });
 
 export const walletconnect = new WalletConnectConnector({
-  rpc: { 1: RPC_URLS[1] },
+  rpc: { 25: RPC_URLS[25] },
   bridge: "https://bridge.walletconnect.org",
   qrcode: true,
-  pollingInterval: POLLING_INTERVAL
+  pollingInterval: POLLING_INTERVAL,
 });
 
 export const walletlink = new WalletLinkConnector({
-  url: RPC_URLS[1],
-  appName: "iearn.financaae"
+  url: RPC_URLS[25],
+  appName: "iearn.financaae",
 });
 
 export const ledger = new LedgerConnector({
-  chainId: 1,
-  url: RPC_URLS[1],
-  pollingInterval: POLLING_INTERVAL
+  chainId: 25,
+  url: RPC_URLS[25],
+  pollingInterval: POLLING_INTERVAL,
 });
 
 export const trezor = new TrezorConnector({
-  chainId: 1,
-  url: RPC_URLS[1],
+  chainId: 25,
+  url: RPC_URLS[25],
   pollingInterval: POLLING_INTERVAL,
   manifestEmail: "dummy@abc.xyz",
-  manifestAppUrl: "https://8rg3h.csb.app/"
+  manifestAppUrl: "https://8rg3h.csb.app/",
 });
 
 export const frame = new FrameConnector({ supportedChainIds: [1] });
@@ -64,6 +65,6 @@ export const squarelink = new SquarelinkConnector({
   networks: [1, 100]
 });
 
-export const torus = new TorusConnector({ chainId: 1 });
+export const torus = new TorusConnector({ chainId: 25 });
 
-export const authereum = new AuthereumConnector({ chainId: 1 });
+export const authereum = new AuthereumConnector({ chainId: 25 });
