@@ -81,14 +81,16 @@ const styles = theme => ({
   },
   walletAddress: {
     padding: '12px',
-    border: '2px solid rgb(174, 174, 174)',
-    borderRadius: '50px',
+    // border: '2px solid rgb(174, 174, 174)',
+    borderRadius: '5px',
+    background: 'linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(8,24,131,1) 51%, rgba(0,212,255,1) 100%)',
+    color: 'white',
     display: 'flex',
     alignItems: 'center',
     cursor: 'pointer',
     '&:hover': {
-      border: "2px solid "+colors.borderBlue,
-      background: 'rgba(47, 128, 237, 0.1)'
+      // border: "2px solid "+colors.borderBlue,
+      // background: 'rgba(47, 128, 237, 0.1)'
     },
     [theme.breakpoints.down('sm')]: {
       display: 'flex',

@@ -81,7 +81,7 @@ class Store {
               name: 'DAI',
               symbol: 'DAI',
               description: 'DAI',
-              erc20address: '0x6B175474E89094C44Da98b954EedeAC495271d0F',
+              erc20address: '0xF2001B145b43032AAF5Ee2884e456CCd805F677D',
               balance: 0,
               decimals: 18,
             },
@@ -90,75 +90,75 @@ class Store {
               id: 'USDC',
               name: 'USD Coin',
               symbol: 'USDC',
-              description: 'USD//C',
-              erc20address: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
+              description: 'USDC',
+              erc20address: '0xc21223249CA28397B4B6541dfFaEcC539BfF0c59',
               balance: 0,
               decimals: 6,
             },
             {
               index: 2,
               id: 'USDT',
-              name: 'USDT',
+              name: 'USDT Coin',
               symbol: 'USDT',
               description: 'USDT',
-              erc20address: '0xdAC17F958D2ee523a2206206994597C13D831ec7',
+              erc20address: '0x66e428c3f67a68878562e79A0234c1F83c208770',
               balance: 0,
               decimals: 6,
             },
           ]
         },
-        {
-          id: 'BTC',
-          name: 'renBTC/wBTC/sBTC Pool',
-          erc20address: '0x7fC77b5c7614E1533320Ea6DDc2Eb61fa00A9714',
-          balance: 0,
-          decimals: 18,
-          assets: [
-            {
-              index: 0,
-              id: 'renBTC',
-              name: 'renBTC',
-              symbol: 'renBTC',
-              description: 'renBTC',
-              erc20address: '0xEB4C2781e4ebA804CE9a9803C67d0893436bB27D',
-              balance: 0,
-              decimals: 8,
-            },
-            {
-              index: 1,
-              id: 'WBTC',
-              name: 'Wrapped BTC',
-              symbol: 'WBTC',
-              description: 'Wrapped BTC',
-              erc20address: '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599',
-              balance: 0,
-              decimals: 8,
-            },
-            {
-              id: 'sBTC',
-              name: 'Synth sBTC',
-              symbol: 'sBTC',
-              description: 'Synth sBTC',
-              erc20address: '0xfE18be6b3Bd88A2D2A7f928d00292E7a9963CfC6',
-              balance: 0,
-              decimals: 18,
-            },
-          ]
-        }
+        // {
+        //   id: 'BTC',
+        //   name: 'renBTC/wBTC/sBTC Pool',
+        //   erc20address: '0x7fC77b5c7614E1533320Ea6DDc2Eb61fa00A9714',
+        //   balance: 0,
+        //   decimals: 18,
+        //   assets: [
+        //     {
+        //       index: 0,
+        //       id: 'renBTC',
+        //       name: 'renBTC',
+        //       symbol: 'renBTC',
+        //       description: 'renBTC',
+        //       erc20address: '0xEB4C2781e4ebA804CE9a9803C67d0893436bB27D',
+        //       balance: 0,
+        //       decimals: 8,
+        //     },
+        //     {
+        //       index: 1,
+        //       id: 'WBTC',
+        //       name: 'Wrapped BTC',
+        //       symbol: 'WBTC',
+        //       description: 'Wrapped BTC',
+        //       erc20address: '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599',
+        //       balance: 0,
+        //       decimals: 8,
+        //     },
+        //     {
+        //       id: 'sBTC',
+        //       name: 'Synth sBTC',
+        //       symbol: 'sBTC',
+        //       description: 'Synth sBTC',
+        //       erc20address: '0xfE18be6b3Bd88A2D2A7f928d00292E7a9963CfC6',
+        //       balance: 0,
+        //       decimals: 18,
+        //     },
+        //   ]
+        // }
       ],
       connectorsByName: {
         MetaMask: injected,
         TrustWallet: injected,
-        WalletConnect: walletconnect,
-        WalletLink: walletlink,
-        Ledger: ledger,
-        Trezor: trezor,
-        Frame: frame,
-        Fortmatic: fortmatic,
-        Portis: portis,
-        Squarelink: squarelink,
-        Torus: torus,
-        Authereum: authereum
+        // WalletConnect: walletconnect,
+        // WalletLink: walletlink,
+        // Ledger: ledger,
+        // Trezor: trezor,
+        // Frame: frame,
+        // Fortmatic: fortmatic,
+        // Portis: portis,
+        // Squarelink: squarelink,
+        // Torus: torus,
+        // Authereum: authereum
       },
       account: {},
       web3context: null
@@ -229,7 +229,7 @@ class Store {
 
       if(parseFloat(ethAllowance) < parseFloat(amount)) {
 
-        await erc20Contract.methods.approve(contract, amountToSend).send({ from: account.address, gasPrice: web3.utils.toWei(await this._getGasPrice(), 'gwei') })
+        await erc20Contract.methods.approve(contract, amountToSend).send({ from: account.address})
 
         return true
       } else {
@@ -259,7 +259,7 @@ class Store {
       var amountToSend = MAX_UINT256
 
       if(parseFloat(ethAllowance) < parseFloat(amount)) {
-        await erc20Contract.methods.approve(contract, amountToSend).send({ from: account.address, gasPrice: web3.utils.toWei(await this._getGasPrice(), 'gwei') })
+        await erc20Contract.methods.approve(contract, amountToSend).send({ from: account.address})
         callback()
       } else {
         callback()
@@ -281,17 +281,17 @@ class Store {
     }
 
     const web3 = await this._getWeb3Provider()
-    let poolsV1 = await this._getPools(web3)
+    // let poolsV1 = await this._getPools(web3)
     let poolsV2 = await this._getPoolsV2(web3)
 
     if(!poolsV2) {
       poolsV2 = []
     }
-    if(!poolsV1) {
-      poolsV1 = []
-    }
+    // if(!poolsV1) {
+    //   poolsV1 = []
+    // }
 
-    const pools = [...poolsV2, ...poolsV1]
+    const pools = [...poolsV2]
 
     async.map(pools, (pool, callback) => {
       this._getPoolData(web3, pool, account, callback)
@@ -332,12 +332,13 @@ class Store {
   _getPoolsV2 = async (web3) => {
     try {
       const curveFactoryContract = new web3.eth.Contract(config.curveFactoryV2ABI, config.curveFactoryV2Address)
-
+      // console.log('curveFactoryContract', curveFactoryContract)
       const poolCount = await curveFactoryContract.methods.pool_count().call()
 
       const pools = await Promise.all([...Array(parseInt(poolCount)).keys()].map(
         i => curveFactoryContract.methods.pool_list(i).call()
       ))
+      console.log("pools", pools, poolCount)
 
       return pools.map((poolAddress) => {
         return {
@@ -556,7 +557,7 @@ class Store {
 
     console.log(pool.address, amounts, receive)
 
-    metapoolContract.methods.add_liquidity(pool.address, amounts, receive).send({ from: account.address, gasPrice: web3.utils.toWei(await this._getGasPrice(), 'gwei') })
+    metapoolContract.methods.add_liquidity(pool.address, amounts, receive).send({ from: account.address})
     .on('transactionHash', function(hash){
       emitter.emit(SNACKBAR_TRANSACTION_HASH, hash)
       callback(null, hash)
@@ -618,7 +619,7 @@ class Store {
 
     //calcualte minimum amounts ?
 
-    metapoolContract.methods.remove_liquidity(pool.address, amountToSend, [0, 0, 0, 0]).send({ from: account.address, gasPrice: web3.utils.toWei(await this._getGasPrice(), 'gwei') })
+    metapoolContract.methods.remove_liquidity(pool.address, amountToSend, [0, 0, 0, 0]).send({ from: account.address})
     .on('transactionHash', function(hash){
       emitter.emit(SNACKBAR_TRANSACTION_HASH, hash)
       callback(null, hash)
@@ -723,7 +724,7 @@ class Store {
       .dividedBy(100)
       .toFixed(0)
 
-    metapoolContract.methods.exchange_underlying(from.index, to.index, amountToSend, receive).send({ from: account.address, gasPrice: web3.utils.toWei(await this._getGasPrice(), 'gwei') })
+    metapoolContract.methods.exchange_underlying(from.index, to.index, amountToSend, receive).send({ from: account.address})
     .on('transactionHash', function(hash){
       emitter.emit(SNACKBAR_TRANSACTION_HASH, hash)
       callback(null, hash)
@@ -803,7 +804,7 @@ class Store {
   _callDeployMetapool = async (web3, account, basePool, address, name, symbol, a, fee, callback) => {
     const curveFactoryContract = new web3.eth.Contract(config.curveFactoryV2ABI, config.curveFactoryV2Address)
 
-    curveFactoryContract.methods.deploy_metapool(basePool.erc20address, name, symbol, address, '10', '4000000').send({ from: account.address, gasPrice: web3.utils.toWei(await this._getGasPrice(), 'gwei') })
+    curveFactoryContract.methods.deploy_metapool(basePool.erc20address, name, symbol, address, '10', '4000000').send({ from: account.address})
     .on('transactionHash', function(hash){
       emitter.emit(SNACKBAR_TRANSACTION_HASH, hash)
       callback(null, hash)
