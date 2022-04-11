@@ -175,12 +175,12 @@ class Header extends Component {
               height={ '40px' }
               onClick={ () => { this.nav('') } }
             />
-            <Typography variant={ 'h3'} className={ classes.name } onClick={ () => { this.nav('') } }>Curve Swaps</Typography>
+            <Typography variant={ 'h3'} className={ classes.name } onClick={ () => { this.nav('') } }>MM Swaps</Typography>
           </div>
           <div className={ classes.links }>
-            { this.renderLink('swap') }
-            { this.renderLink('liquidity') }
-            { this.renderLink('add') }
+            { this.renderLink('Swap') }
+            { this.renderLink('Liquidity') }
+            { this.renderLink('Add') }
           </div>
           <div className={ classes.account }>
             { address &&
