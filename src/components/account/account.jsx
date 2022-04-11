@@ -108,7 +108,7 @@ class Account extends Component {
 
     return (
       <div className={ classes.notConnectedRoot }>
-        <Typography variant={'h5'} className={ classes.disclaimer }>This project is in beta. Use at your own risk.</Typography>
+        {/* <Typography variant={'h5'} className={ classes.disclaimer }>This project is in beta. Use at your own risk.</Typography> */}
         <div className={ classes.connectHeading }>
           <Typography variant='h3'>Connect your wallet to continue</Typography>
         </div>

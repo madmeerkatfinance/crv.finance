@@ -39,7 +39,7 @@ const styles = theme => ({
   inputContainer: {
     display: 'flex',
     padding: '30px',
-    borderRadius: '50px',
+    borderRadius: '5px',
     flexDirection: 'column',
     alignItems: 'flex-start',
     justifyContent: 'flex-start',
@@ -160,7 +160,8 @@ const styles = theme => ({
   },
   label: {
     flex: 1,
-    paddingLeft: '12px'
+    paddingLeft: '2px',
+    paddingBottom: '8px'
   },
   between: {
     width: '24px'
@@ -173,7 +174,7 @@ const styles = theme => ({
   },
   titleBalance: {
     padding: '20px 10px',
-    borderRadius: '50px',
+    borderRadius: '5px',
     border: '1px solid '+colors.borderBlue,
     background: colors.white,
     display: 'flex',

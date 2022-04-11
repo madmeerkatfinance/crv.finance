@@ -45,7 +45,7 @@ const styles = theme => ({
   inputContainer: {
     display: 'flex',
     padding: '30px',
-    borderRadius: '50px',
+    borderRadius: '5px',
     flexDirection: 'column',
     alignItems: 'flex-start',
     justifyContent: 'flex-start',
@@ -57,7 +57,7 @@ const styles = theme => ({
   inputCardHeading: {
     width: '100%',
     color: colors.darkGray,
-    paddingLeft: '12px'
+    paddingLeft: '2px'
   },
   valContainer: {
     display: 'flex',
@@ -67,7 +67,7 @@ const styles = theme => ({
   },
   balances: {
     textAlign: 'right',
-    paddingRight: '20px',
+    paddingRight: '2px',
     cursor: 'pointer'
   },
   assetSelectMenu: {
@@ -166,7 +166,8 @@ const styles = theme => ({
   },
   label: {
     flex: 1,
-    paddingLeft: '12px'
+    paddingLeft: '2px',
+    paddingBottom: '8px'
   },
   between: {
     width: '24px'

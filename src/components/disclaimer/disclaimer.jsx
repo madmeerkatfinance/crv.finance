@@ -39,7 +39,7 @@ class Disclaimer extends Component {
 
     return (
       <div className={ classes.root }>
-        <Typography variant={'h5'} className={ classes.disclaimer }>This project is in beta. Use at your own risk.</Typography>
+        {/* <Typography variant={'h5'} className={ classes.disclaimer }>This project is in beta. Use at your own risk.</Typography> */}
       </div>
     )
   }
