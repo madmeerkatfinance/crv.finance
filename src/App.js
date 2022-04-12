@@ -15,6 +15,7 @@ import Disclaimer from './components/disclaimer';
 import SnackbarController from './components/snackbar';
 import Account from './components/account';
 import Swap from './components/swap';
+import ThreePool from './components/ThreePool/ThreePool';
 import Liquidity from './components/liquidity';
 import AddPool from './components/addPool';
 
@@ -107,6 +108,9 @@ class App extends Component {
                 </Route>
                 <Route path="/swap">
                   <Swap />
+                </Route>
+                <Route path="/3pool">
+                  <ThreePool />
                 </Route>
                 <Route path="/add">
                   <AddPool />

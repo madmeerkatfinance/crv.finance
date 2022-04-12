@@ -18,6 +18,7 @@ import {
   BALANCES_RETURNED,
 
   DEPOSIT,
+  DEPOSIT_BASE_POOL,
   DEPOSIT_RETURNED,
   GET_DEPOSIT_AMOUNT,
   GET_DEPOSIT_AMOUNT_RETURNED,
@@ -176,6 +177,9 @@ class Store {
           case DEPOSIT:
             this.deposit(payload)
             break
+          case DEPOSIT_BASE_POOL:
+            this.depositBasePool(payload)
+              break
           case WITHDRAW:
             this.withdraw(payload)
             break
@@ -487,6 +491,51 @@ class Store {
 
   deposit = async (payload) => {
     try {
+      const { pool, amounts } = payload.content
+      const account = store.getStore('account')
+      const web3 = await this._getWeb3Provider()
+
+      const approvals = await Promise.all(pool.assets.map(
+        (asset, index) => { return this._checkApproval2(asset, account, amounts[index], pool.liquidityAddress) }
+      ))
+
+      console.log(approvals)
+
+      const amountsBN = amounts.map((amount, index) => {
+
+        let amountToSend = web3.utils.toWei(amount, "ether")
+        if (pool.assets[index].decimals !== 18) {
+          const decimals = new BigNumber(10)
+            .pow(pool.assets[index].decimals)
+
+          amountToSend = new BigNumber(amount)
+            .times(decimals)
+            .toFixed(0)
+        }
+
+        return amountToSend
+      })
+
+      console.log(amountsBN)
+
+      this._callAddLiquidity(web3, account, pool, amountsBN, (err, a) => {
+        if(err) {
+          emitter.emit(ERROR, err)
+          return emitter.emit(SNACKBAR_ERROR, err)
+        }
+
+        emitter.emit(DEPOSIT_RETURNED)
+      })
+
+    } catch (ex) {
+      emitter.emit(ERROR, ex)
+      emitter.emit(SNACKBAR_ERROR, ex)
+    }
+  }
+
+  depositBasePool = async (payload) => {
+    try {
+      console.log(payload)
       const { pool, amounts } = payload.content
       const account = store.getStore('account')
       const web3 = await this._getWeb3Provider()

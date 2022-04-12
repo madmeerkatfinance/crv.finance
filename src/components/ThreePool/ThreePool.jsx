@@ -1,17 +1,17 @@
 import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
 import { withStyles } from '@material-ui/core/styles';
-import PoolSeedingCTA from '../poolSeedingCTA'
+import PoolSeedingCTA from '../poolSeedingCTA/poolSeedingCTA'
 import {
   Typography,
   TextField,
   MenuItem,
   Button,
 } from '@material-ui/core';
-import { colors } from '../../theme'
+import { colors } from '../../theme/theme'
 
-import Loader from '../loader'
-import SlippageInfo from '../slippageInfo'
+import Loader from '../loader/loader'
+import SlippageInfo from '../slippageInfo/slippageInfo'
 import { floatToFixed } from '../../utils/numbers'
 
 import {
@@ -28,9 +28,9 @@ import {
   GET_WITHDRAW_AMOUNT,
   GET_WITHDRAW_AMOUNT_RETURNED,
   SLIPPAGE_INFO_RETURNED,
-} from '../../constants'
+} from '../../constants/constants'
 
-import Store from "../../stores";
+import Store from "../../stores/store";
 const emitter = Store.emitter
 const dispatcher = Store.dispatcher
 const store = Store.store
@@ -210,39 +210,44 @@ const styles = theme => ({
   },
 });
 
-class Liquidity extends Component {
+class ThreePool extends Component {
 
   constructor(props) {
     super()
 
     const account = store.getStore('account')
-    const pools = store.getStore('pools')
 
-    const preSelectedPoolMatches = window.location.hash.match(/pool=([a-z0-9/-]+)/i);
-    const preSelectedPool = preSelectedPoolMatches === null ? null : preSelectedPoolMatches[1];
+    const basePools = store.getStore('basePools')
+
+    const selectedBasePool = basePools && basePools.length > 0 ? basePools[0] : null
+
+
+    // const preSelectedPoolMatches = window.location.hash.match(/pool=([a-z0-9/-]+)/i);
+    // const preSelectedPool = preSelectedPoolMatches === null ? null : preSelectedPoolMatches[1];
 
     let selectedPool = null
-    if(pools && pools.length > 0) {
-      const v2PoolsArr = pools.filter((pool) => {
-        return pool.version === 2
-      })
-      if(v2PoolsArr.length > 0) {
-        selectedPool = (
-          !v2PoolsArr || v2PoolsArr.length === 0 ? null :
-          preSelectedPool !== null ? v2PoolsArr.find(({ id }) => id === preSelectedPool) :
-          v2PoolsArr[0]
-        );
-      }
-    }
+    // if(pools && pools.length > 0) {
+    //   const v2PoolsArr = pools.filter((pool) => {
+    //     return pool.version === 2
+    //   })
+    //   if(v2PoolsArr.length > 0) {
+    //     selectedPool = (
+    //       !v2PoolsArr || v2PoolsArr.length === 0 ? null :
+    //       preSelectedPool !== null ? v2PoolsArr.find(({ id }) => id === preSelectedPool) :
+    //       v2PoolsArr[0]
+    //     );
+    //   }
+    // }
 
     this.state = {
       account: account,
-      pools: pools,
+      basePools: basePools,
+      basePool: selectedBasePool ? selectedBasePool.name : '',
       pool: selectedPool ? selectedPool.id : '',
       selectedPool: selectedPool,
       poolAmount: '',
       poolAmountError: '',
-      loading: !(pools && pools.length > 0 && pools[0].assets.length > 0),
+      loading: !(basePools && basePools.length > 0 && basePools[0].assets.length > 0),
       activeTab: 'deposit',
     }
 
@@ -273,17 +278,17 @@ class Liquidity extends Component {
   };
 
   configureReturned = () => {
-    const pools = store.getStore('pools')
+    const pools = store.getStore('basePools')
 
-    let selectedPool = null
-    if(pools && pools.length > 0) {
-      const v2PoolsArr = pools.filter((pool) => {
-        return pool.version === 2
-      })
-      if(v2PoolsArr.length > 0) {
-        selectedPool = v2PoolsArr[0]
-      }
-    }
+    let selectedPool = pools && pools.length > 0 ? pools[0] : null
+    // if(pools && pools.length > 0) {
+    //   const v2PoolsArr = pools.filter((pool) => {
+    //     return pool.version === 2
+    //   })
+    //   if(v2PoolsArr.length > 0) {
+    //     selectedPool = v2PoolsArr[0]
+    //   }
+    // }
 
     const newStateSlice = {
       account: store.getStore('account'),
@@ -486,26 +491,24 @@ class Liquidity extends Component {
   }
 
   renderPoolSelect = (id) => {
-    const { loading, pools, pool } = this.state
+    const { loading, basePools, basePool } = this.state
     const { classes } = this.props
-
-    console.log(pools)
 
     return (
       <div className={ classes.valContainer }>
         <div className={ classes.flexy }>
           <div className={ classes.label }>
-            <Typography variant='h4'>pool</Typography>
+            <Typography variant='h4'>base pool</Typography>
           </div>
           <div className={ classes.balances }>
           </div>
         </div>
         <div>
           <TextField
-            id={ 'pool' }
-            name={ 'pool' }
+            id={ 'basePool' }
+            name={ 'basePool' }
             select
-            value={ pool }
+            value={ basePool }
             onChange={ this.onPoolSelectChange }
             SelectProps={{
               native: false,
@@ -522,9 +525,8 @@ class Liquidity extends Component {
             disabled={ loading }
             className={ classes.actionInput }
             placeholder={ 'Select' }
-            helperText={ 'Deposits are closed for V1 pools' }
           >
-            { pools ? pools.filter((pool) => { return pool.version === 2; }).map((pool) => { return this.renderPoolOption(pool) }) : null }
+            { basePools ? basePools.map((basePool) => { return this.renderPoolOption(basePool) }) : null }
           </TextField>
         </div>
       </div>
@@ -547,7 +549,7 @@ class Liquidity extends Component {
             </div>
             <div className={ classes.assetSelectIconName }>
               <Typography variant='h4'>{ option.name }</Typography>
-              <Typography variant='h5' className={`${ option.version === 1 ? classes.version1 : classes.version2 }`}>version { option.version }</Typography>
+              {/* <Typography variant='h5' className={`${ option.version === 1 ? classes.version1 : classes.version2 }`}>version { option.version }</Typography> */}
             </div>
           </div>
         </React.Fragment>
@@ -734,24 +736,24 @@ class Liquidity extends Component {
   }
 
   onPoolSelectChange = (event) => {
-    const selectedPool = this.state.pools.find((pool) => {
-      return pool.id === event.target.value
-    })
+    // const selectedPool = this.state.basePools.find((pool) => {
+    //   return pool.id === event.target.value
+    // })
 
-    const newStateSlice = {
-      [event.target.name]: event.target.value,
-      selectedPool,
-      ...this.getStateSliceUserBalancesForSelectedPool(selectedPool),
-    };
+    // const newStateSlice = {
+    //   [event.target.name]: event.target.value,
+    //   selectedPool,
+    //   ...this.getStateSliceUserBalancesForSelectedPool(selectedPool),
+    // };
 
-    this.setState(newStateSlice);
-    this.getDepositAmount(newStateSlice);
+    // this.setState(newStateSlice);
+    // this.getDepositAmount(newStateSlice);
 
-    // If an url fragment was used to auto-select a pool, remove that
-    // fragment when we change pool to revert to the naked /liquidity url.
-    if (this.props.history.location.hash !== '') {
-      this.props.history.replace('/liquidity');
-    }
+    // // If an url fragment was used to auto-select a pool, remove that
+    // // fragment when we change pool to revert to the naked /liquidity url.
+    // if (this.props.history.location.hash !== '') {
+    //   this.props.history.replace('/liquidity');
+    // }
   }
 
   onChange = (event) => {
@@ -892,4 +894,4 @@ class Liquidity extends Component {
   }
 }
 
-export default withRouter(withStyles(styles)(Liquidity));
+export default withRouter(withStyles(styles)(ThreePool));
