@@ -28,7 +28,9 @@ const styles = theme => ({
   },
   headerV2: {
     background: colors.white,
-    border: '1px solid '+colors.borderBlue,
+    // border: '1px solid '+colors.borderBlue,
+    boxShadow: '0 10px 15px -3px rgba(56,189,248,0.1),0 4px 6px -2px rgba(56,189,248,0.05)',
+
     borderTop: 'none',
     width: '100%',
     // borderRadius: '0px 0px 50px 50px',
@@ -83,7 +85,7 @@ const styles = theme => ({
     padding: '12px',
     // border: '2px solid rgb(174, 174, 174)',
     borderRadius: '5px',
-    background: 'linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(8,24,131,1) 51%, rgba(0,212,255,1) 100%)',
+    background: 'linear-gradient(90deg, #681dff 0%, #a455ff 100%)',
     color: 'white',
     display: 'flex',
     alignItems: 'center',
@@ -97,7 +99,8 @@ const styles = theme => ({
       position: 'absolute',
       top: '90px',
       border: "1px solid "+colors.borderBlue,
-      background: colors.white
+      // background: colors.white
+      background: 'linear-gradient(90deg, #681dff 0%, #a455ff 100%)',
     }
   },
   walletTitle: {
@@ -116,7 +119,7 @@ const styles = theme => ({
   name: {
     paddingLeft: '24px',
     [theme.breakpoints.down('sm')]: {
-      display: 'none',
+      display: 'block',
     }
   }
 });
@@ -169,12 +172,12 @@ class Header extends Component {
       <div className={ classes.root }>
         <div className={ classes.headerV2 }>
           <div className={ classes.icon }>
-            <img
+            {/* <img
               alt=""
               src={ require('../../assets/YFI-logo.png') }
               height={ '40px' }
               onClick={ () => { this.nav('') } }
-            />
+            /> */}
             <Typography variant={ 'h3'} className={ classes.name } onClick={ () => { this.nav('') } }>MM Swaps</Typography>
           </div>
           <div className={ classes.links }>

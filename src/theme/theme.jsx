@@ -15,7 +15,7 @@ export const colors = {
   white: "#fff",
   black: '#000',
   darkBlue: "#2c3b57",
-  blue: "#2F80ED",
+  blue: "#a455ff",
   gray: "#e1e1e1",
   lightGray: "#737373",
   lightBlack: "#6a6a6a",
@@ -24,15 +24,15 @@ export const colors = {
   red: '#ed4337',
   orange: 'orange',
   pink: '#DC6BE5',
-  compoundGreen: '#00d395',
+  compoundGreen: '#39da5e',
   tomato: '#e56b73',
   purple: '#935dff',
 
   text: "#212529",
-  lightBlue: "#2F80ED",
-  topaz: "#0b8f92",
+  lightBlue: "#681DFF",
+  topaz: "#681dff",
   darkGray: "rgba(43,57,84,.5)",
-  borderBlue: 'rgba(25, 101, 233, 0.5)'
+  borderBlue: '#a455ff',
 };
 
 const breakpoints = createBreakpoints({
@@ -255,7 +255,7 @@ const iswapTheme =  {
           backgroundColor: "rgba(47,128,237, 0.2)",
         },
         "&$selected": {
-          backgroundColor: '#2f80ed',
+          backgroundColor: '#681DFF',
           '& > span > h4': {
             color: '#fff',
           },

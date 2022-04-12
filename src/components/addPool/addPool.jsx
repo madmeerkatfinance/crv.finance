@@ -39,13 +39,15 @@ const styles = theme => ({
   inputContainer: {
     display: 'flex',
     padding: '30px',
-    borderRadius: '5px',
+    borderRadius: '1rem',
     flexDirection: 'column',
     alignItems: 'flex-start',
     justifyContent: 'flex-start',
     margin: '40px 0px',
-    border: '1px solid '+colors.borderBlue,
-    minWidth: '500px',
+    // border: '1px solid '+colors.borderBlue,
+    boxShadow: '0 10px 15px -3px rgba(56,189,248,0.1),0 4px 6px -2px rgba(56,189,248,0.05)',
+    maxWidth: '500px',
+    width: '80%',
     background: colors.white
   },
   inputCardHeading: {
@@ -96,11 +98,11 @@ const styles = theme => ({
   },
   actionButton: {
     '&:hover': {
-      backgroundColor: "#2F80ED",
+      backgroundColor: "#681DFF",
     },
     marginTop: '24px',
     padding: '12px',
-    backgroundColor: "#2F80ED",
+    backgroundColor: "#681DFF",
     borderRadius: '1rem',
     border: '1px solid #E1E1E1',
     fontWeight: 500,
@@ -196,7 +198,7 @@ const styles = theme => ({
   assetInfoContainer: {
     width: '100%',
     background: colors.gray,
-    borderRadius: '40px',
+    borderRadius: '5px',
     padding: '24px'
   },
   assetInfo: {
