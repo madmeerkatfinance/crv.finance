@@ -72,7 +72,7 @@ class Store {
         {
           id: 'USD',
           name: 'DAI/USDC/USDT Pool',
-          erc20address: '0xbEbc44782C7dB0a1A60Cb6fe97d0b483032FF1C7',
+          erc20address: '0x61bB2F4a4763114268a47fB990e633Cb40f045F8',
           balance: 0,
           decimals: 18,
           assets: [
@@ -563,7 +563,7 @@ class Store {
 
       console.log(amountsBN)
 
-      this._callAddLiquidity(web3, account, pool, amountsBN, (err, a) => {
+      this._callAddLiquidityBasePool(web3, account, pool, amountsBN, (err, a) => {
         if(err) {
           emitter.emit(ERROR, err)
           return emitter.emit(SNACKBAR_ERROR, err)
@@ -578,6 +578,54 @@ class Store {
     }
   }
 
+
+  _callAddLiquidityBasePool = async (web3, account, pool, amounts, callback) => {
+    const basePoolContract = new web3.eth.Contract(config.basePoolABI, pool.erc20address)
+    let receive = '0'
+    debugger
+    try {
+      const amountToReceive = await basePoolContract.methods.calc_token_amount(amounts, true).call()
+      receive = new BigNumber(amountToReceive)
+        .times(95)
+        .dividedBy(100)
+        .toFixed(0)
+    } catch(ex) {
+      console.log('_callAddLiquidityBasePool', pool.erc20address, ex)
+      //if we can't calculate, we need to check the totalSupply
+      // if 0, we just set receive to 0
+      // if not 0, we throw an exception because it shouldn't be.
+      // const tokenContract = new web3.eth.Contract(config.erc20ABI, pool.address)
+      // const totalSupply = await tokenContract.methods.totalSupply().call()
+      // console.log(totalSupply)
+      // if(totalSupply == 0) {
+      //   receive = '0'
+      // } else {
+        return callback(ex)
+      // }
+    }
+
+    // console.log(pool.address, amounts, receive)
+
+    basePoolContract.methods.add_liquidity(amounts, receive).send({ from: account.address})
+    .on('transactionHash', function(hash){
+      emitter.emit(SNACKBAR_TRANSACTION_HASH, hash)
+      callback(null, hash)
+    })
+    .on('confirmation', function(confirmationNumber, receipt){
+      if(confirmationNumber === 1) {
+        dispatcher.dispatch({ type: CONFIGURE, content: {} })
+      }
+    })
+    .on('receipt', function(receipt){
+    })
+    .on('error', function(error) {
+      if(error.message) {
+        return callback(error.message)
+      }
+      callback(error)
+    })
+  }
+  
   _callAddLiquidity = async (web3, account, pool, amounts, callback) => {
     const metapoolContract = new web3.eth.Contract(pool.liquidityABI, pool.liquidityAddress)
 

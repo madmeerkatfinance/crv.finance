@@ -28,6 +28,7 @@ import {
   GET_WITHDRAW_AMOUNT,
   GET_WITHDRAW_AMOUNT_RETURNED,
   SLIPPAGE_INFO_RETURNED,
+  DEPOSIT_BASE_POOL,
 } from '../../constants/constants'
 
 import Store from "../../stores/store";
@@ -498,7 +499,7 @@ class ThreePool extends Component {
       <div className={ classes.valContainer }>
         <div className={ classes.flexy }>
           <div className={ classes.label }>
-            <Typography variant='h4'>base pool</Typography>
+            <Typography variant='h4'>Base pool</Typography>
           </div>
           <div className={ classes.balances }>
           </div>
@@ -863,13 +864,15 @@ class ThreePool extends Component {
 
     let amounts = []
 
+    console.log(selectedPool);
+
     for(let i = 0; i < selectedPool.assets.length; i++) {
       amounts.push(this.state[selectedPool.assets[i].symbol+'Amount'])
     }
 
     if(!error) {
       this.setState({ loading: true })
-      dispatcher.dispatch({ type: DEPOSIT, content: { pool: selectedPool, amounts: amounts } })
+      dispatcher.dispatch({ type: DEPOSIT_BASE_POOL, content: { pool: selectedPool, amounts: amounts } })
     }
   }
 
