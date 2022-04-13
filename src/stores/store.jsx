@@ -14,6 +14,7 @@ import {
 
   CONFIGURE,
   CONFIGURE_RETURNED,
+  BASE_POOL_CONFIGURE_RETURNED,
   GET_BALANCES,
   BALANCES_RETURNED,
 
@@ -37,7 +38,8 @@ import {
   GET_ASSET_INFO,
   GET_ASSET_INFO_RETURNED,
   ADD_POOL,
-  ADD_POOL_RETURNED
+  ADD_POOL_RETURNED,
+  GET_BASE_DEPOSIT_AMOUNT
 } from '../constants'
 import Web3 from 'web3'
 
@@ -72,7 +74,7 @@ class Store {
         {
           id: 'USD',
           name: 'DAI/USDC/USDT Pool',
-          erc20address: '0x61bB2F4a4763114268a47fB990e633Cb40f045F8',
+          address: '0x61bB2F4a4763114268a47fB990e633Cb40f045F8',
           balance: 0,
           decimals: 18,
           assets: [
@@ -198,6 +200,9 @@ class Store {
           case GET_DEPOSIT_AMOUNT:
             this.getDepositAmount(payload)
             break;
+          case GET_BASE_DEPOSIT_AMOUNT:
+              this.getBaseDepositAmount(payload)
+              break;
           case GET_WITHDRAW_AMOUNT:
             this.getWithdrawAmount(payload)
             break;
@@ -219,7 +224,7 @@ class Store {
 
   _checkApproval2 = async (asset, account, amount, contract) => {
     try {
-      console.log(asset)
+      // console.log(asset)
       const web3 = await this._getWeb3Provider()
       const erc20Contract = new web3.eth.Contract(config.erc20ABI, asset.erc20address)
       const allowance = await erc20Contract.methods.allowance(account.address, contract).call({ from: account.address })
@@ -228,7 +233,7 @@ class Store {
       if (asset.decimals !== 18) {
         ethAllowance = (allowance*10**asset.decimals).toFixed(0)
       }
-
+      console.log("allowance", ethAllowance)
       var amountToSend = MAX_UINT256
 
       if(parseFloat(ethAllowance) < parseFloat(amount)) {
@@ -279,6 +284,7 @@ class Store {
 
   configure = async () => {
     const account = store.getStore('account')
+    const basepools = store.getStore('basePools')
 
     if(!account || !account.address) {
       return false
@@ -296,6 +302,18 @@ class Store {
     // }
 
     const pools = [...poolsV2]
+
+    async.map(basepools, (pool, callback) => {
+      this._getBasePoolData(web3, pool, account, callback)
+    }, (err, poolData) => {
+      if(err) {
+        emitter.emit(ERROR, err)
+        return emitter.emit(SNACKBAR_ERROR, err)
+      }
+
+      store.setStore({ basePools: poolData })
+      return emitter.emit(BASE_POOL_CONFIGURE_RETURNED)
+    })
 
     async.map(pools, (pool, callback) => {
       this._getPoolData(web3, pool, account, callback)
@@ -460,6 +478,7 @@ class Store {
         let liquidityAddress = ''
         let liquidityABI = ''
 
+        console.log(assets)
         const basePools = store.getStore('basePools')
 
         if(assets[1].erc20address.toLowerCase() === '0x6B175474E89094C44Da98b954EedeAC495271d0F'.toLowerCase()) {
@@ -480,6 +499,100 @@ class Store {
           balance: balance.toString(),
           isPoolSeeded,
           id: `${symbol}-${pool.version}`,
+          assets: assets
+        })
+      })
+    } catch(ex) {
+      console.log(ex)
+      return callback(ex)
+    }
+  }
+
+  _getBasePoolData = async (web3, pool, account, callback) => {
+    try {
+      const basePoolContract = new web3.eth.Contract(config.basePoolABI, pool.address)
+      // debugger
+      // const symbol = await basePoolContract.methods.symbol().call()
+      // const decimals = parseInt(await basePoolContract.methods.decimals().call())
+      // const name = await basePoolContract.methods.name().call()
+
+      // let balance = await basePoolContract.methods.balanceOf(account.address).call()
+      // const bnDecimals = new BigNumber(10)
+        // .pow(decimals)
+
+      // balance = new BigNumber(balance)
+        // .dividedBy(bnDecimals)
+        // .toFixed(decimals, BigNumber.ROUND_DOWN)
+
+      // let curveFactoryContract = null
+      // if(pool.version === 1) {
+      //   curveFactoryContract = new web3.eth.Contract(config.curveFactoryABI, config.curveFactoryAddress)
+      // } else {
+      //   curveFactoryContract = new web3.eth.Contract(config.curveFactoryV2ABI, config.curveFactoryV2Address)
+      // }
+      // const poolBalances = await curveFactoryContract.methods.get_balances(pool.address).call()
+      // const isPoolSeeded = sumArray(poolBalances) !== 0
+
+      // let coins = await curveFactoryContract.methods.get_underlying_coins(pool.address).call()
+
+      // let filteredCoins = coins.filter((coin) => {
+        // return coin !== ZERO_ADDRESS
+      // })
+
+      let daiBalance = await basePoolContract.methods.balances(0).call();
+      let usdcBalance = await basePoolContract.methods.balances(1).call();
+      let usdtBalance = await basePoolContract.methods.balances(2).call();
+      console.log(daiBalance, usdcBalance, usdtBalance)
+
+      async.map(pool.assets, async (coin, callbackInner) => {
+        try {
+          const returnCoin = await this._getCoinData({
+            web3,
+            filteredCoins: pool.assets,
+            coinAddress: coin.erc20address,
+            accountAddress: account.address,
+          });
+
+          if(callbackInner) {
+            callbackInner(null, returnCoin)
+          } else {
+            return returnCoin
+          }
+        } catch(ex) {
+          console.log(ex)
+
+          if(callbackInner) {
+            callbackInner(ex)
+          } else {
+            throw ex
+          }
+        }
+
+      }, (err, assets) => {
+        if(err) {
+          emitter.emit(ERROR, err)
+          return emitter.emit(SNACKBAR_ERROR, err)
+        }
+        // debugger
+        // let liquidityAddress = ''
+        // let liquidityABI = ''
+
+        // if(assets[1].erc20address.toLowerCase() === '0x6B175474E89094C44Da98b954EedeAC495271d0F'.toLowerCase()) {
+        //   liquidityAddress = config.usdDepositerAddress
+        //   liquidityABI = config.usdDepositerABI
+        // } else {
+        //   liquidityAddress = config.btcDepositerAddress
+        //   liquidityABI = config.btcDepositerABI
+        // }
+            
+        callback(null, {
+          address: pool.address,
+          symbol: "DAI-USDC-USDT", // hardcoded for now
+          decimals: pool.decimals,
+          name: pool.name,
+          balance: pool.balance,
+          isPoolSeeded: true,
+          id: pool.id,
           assets: assets
         })
       })
@@ -541,7 +654,7 @@ class Store {
       const web3 = await this._getWeb3Provider()
 
       const approvals = await Promise.all(pool.assets.map(
-        (asset, index) => { return this._checkApproval2(asset, account, amounts[index], pool.liquidityAddress) }
+        (asset, index) => { return this._checkApproval2(asset, account, amounts[index], pool.address) }
       ))
 
       console.log(approvals)
@@ -580,32 +693,32 @@ class Store {
 
 
   _callAddLiquidityBasePool = async (web3, account, pool, amounts, callback) => {
-    const basePoolContract = new web3.eth.Contract(config.basePoolABI, pool.erc20address)
+    const basePoolContract = new web3.eth.Contract(config.basePoolABI, pool.address)
     let receive = '0'
-    debugger
-    try {
-      const amountToReceive = await basePoolContract.methods.calc_token_amount(amounts, true).call()
-      receive = new BigNumber(amountToReceive)
-        .times(95)
-        .dividedBy(100)
-        .toFixed(0)
-    } catch(ex) {
-      console.log('_callAddLiquidityBasePool', pool.erc20address, ex)
-      //if we can't calculate, we need to check the totalSupply
-      // if 0, we just set receive to 0
-      // if not 0, we throw an exception because it shouldn't be.
-      // const tokenContract = new web3.eth.Contract(config.erc20ABI, pool.address)
-      // const totalSupply = await tokenContract.methods.totalSupply().call()
-      // console.log(totalSupply)
-      // if(totalSupply == 0) {
-      //   receive = '0'
-      // } else {
-        return callback(ex)
-      // }
-    }
+    // try {
+    //   const amountToReceive = await basePoolContract.methods.calc_token_amount(amounts, true).call()
+    //   receive = new BigNumber(amountToReceive)
+    //     .times(95)
+    //     .dividedBy(100)
+    //     .toFixed(0)
+    // } catch(ex) {
+    //   console.log('_callAddLiquidityBasePool', pool.address, ex)
+    //   // if we can't calculate, we need to check the totalSupply
+    //   // if 0, we just set receive to 0
+    //   // if not 0, we throw an exception because it shouldn't be.
+    //   const tokenContract = new web3.eth.Contract(config.erc20ABI, pool.address)
+    //   const totalSupply = await tokenContract.methods.totalSupply().call()
+    //   console.log(totalSupply)
+    //   if(totalSupply == 0) {
+    //     receive = '0'
+    //   } else {
+    //     return callback(ex)
+    //   }
+    // }
 
-    // console.log(pool.address, amounts, receive)
-
+    console.log(pool.address, amounts, receive)
+    // hardcoded for my balances for now
+    // There's a UI bug in the amounts passed as well.
     basePoolContract.methods.add_liquidity(amounts, receive).send({ from: account.address})
     .on('transactionHash', function(hash){
       emitter.emit(SNACKBAR_TRANSACTION_HASH, hash)
@@ -969,6 +1082,66 @@ class Store {
     }
   }
 
+  getBaseDepositAmount = async (payload) => {
+    try {
+
+      emitter.emit(GET_DEPOSIT_AMOUNT_RETURNED, parseFloat(0))
+      emitter.emit(SLIPPAGE_INFO_RETURNED, {
+        slippagePcent: typeof 4 !== 'undefined' ? 4 * 100 : 4,
+      })
+
+      return 
+
+      const { pool, amounts } = payload.content
+      const web3 = await this._getWeb3Provider()
+
+      const amountsBN = amounts.map((amount, index) => {
+        let amountToSend = web3.utils.toWei(amount, "ether")
+        if (pool.assets[index].decimals !== 18) {
+          const decimals = new BigNumber(10)
+            .pow(pool.assets[index].decimals)
+
+          amountToSend = new BigNumber(amount)
+            .times(decimals)
+            .toFixed(0)
+        }
+
+        return amountToSend
+      })
+
+      // const zapContract = new web3.eth.Contract(pool.liquidityABI, pool.liquidityAddress)
+      const poolContract = new web3.eth.Contract(config.basePoolABI, pool.address)
+      let balances = await poolContract.methods.balances(0).call();
+      // debugger
+      const test = await poolContract.methods.calc_token_amount([1,1,1], true).call();
+      // debugger
+      
+      const [receiveAmountBn, virtPriceBn] = await Promise.all([
+        poolContract.methods.calc_token_amount(amountsBN, true).call(),
+        poolContract.methods.get_virtual_price().call(),
+      ])
+
+      const receiveAmount = bnToFixed(receiveAmountBn, 18)
+      let slippage;
+
+      if (Number(receiveAmount)) {
+        const virtualValue = multiplyBnToFixed(virtPriceBn, receiveAmountBn, 18)
+        const realValue = sumArray(amounts) // Assuming each component is at peg
+
+        slippage = (virtualValue / realValue) - 1;
+      }
+
+      emitter.emit(GET_DEPOSIT_AMOUNT_RETURNED, parseFloat(receiveAmount))
+      emitter.emit(SLIPPAGE_INFO_RETURNED, {
+        slippagePcent: typeof slippage !== 'undefined' ? slippage * 100 : slippage,
+      })
+    } catch(ex) {
+      console.log(ex)
+      emitter.emit(ERROR, ex)
+      emitter.emit(SNACKBAR_ERROR, ex)
+    }
+  }
+
   _getGasPrice = async () => {
     try {
       const url = 'https://gasprice.poa.network/'
@@ -994,7 +1167,6 @@ class Store {
     if(!provider) {
       return null
     }
-
     const web3 = new Web3(provider)
 
     return web3
