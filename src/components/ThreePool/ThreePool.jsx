@@ -17,6 +17,7 @@ import {
   DEPOSIT,
   DEPOSIT_RETURNED,
   WITHDRAW,
+  WITHDRAW_BASE,
   WITHDRAW_RETURNED,
   GET_BASE_DEPOSIT_AMOUNT,
   GET_BASE_DEPOSIT_AMOUNT_RETURNED,
@@ -288,14 +289,6 @@ class ThreePool extends Component {
     const pools = store.getStore("basePools");
 
     let selectedPool = pools && pools.length > 0 ? pools[0] : null;
-    // if(pools && pools.length > 0) {
-    //   const v2PoolsArr = pools.filter((pool) => {
-    //     return pool.version === 2
-    //   })
-    //   if(v2PoolsArr.length > 0) {
-    //     selectedPool = v2PoolsArr[0]
-    //   }
-    // }
 
     const newStateSlice = {
       account: store.getStore("account"),
@@ -315,6 +308,8 @@ class ThreePool extends Component {
 
   // Returns hash map of user balances for selected pool, e.g. { BACAmount: '2.00', USDTAmount: '3.00', … }
   getStateSliceUserBalancesForSelectedPool = (selectedPool) => {
+    // Repurposed this function to maintain current select value
+    // Initialised it to 0
     if (!selectedPool) return {};
 
     return Object.assign(
@@ -674,6 +669,7 @@ class ThreePool extends Component {
     const { classes } = this.props;
 
     const { depositAmount, slippagePcent, selectedPool } = this.state;
+    console.log(depositAmount)
     let amount = depositAmount;
     if (!depositAmount) amount = 0.0;
     if (selectedPool && !selectedPool.isPoolSeeded) return null;
@@ -762,7 +758,7 @@ class ThreePool extends Component {
     
     const amount = this.state[type + "Amount"];
     const amountError = this.state[type + "AmountError"];
-    console.log(amount);
+    // console.log(amount);
     
     return (
       <div className={classes.valContainer}>
@@ -981,7 +977,7 @@ class ThreePool extends Component {
 
     this.setState({ loading: true });
     dispatcher.dispatch({
-      type: WITHDRAW,
+      type: WITHDRAW_BASE,
       content: { amount: poolAmount, pool: selectedPool },
     });
   };
