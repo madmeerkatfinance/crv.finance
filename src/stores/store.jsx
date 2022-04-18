@@ -366,7 +366,7 @@ class Store {
       const pools = await Promise.all([...Array(parseInt(poolCount)).keys()].map(
         i => curveFactoryContract.methods.pool_list(i).call()
       ))
-      // console.log("pools", pools, poolCount)
+      console.log("pools", pools, poolCount)
 
       return pools.map((poolAddress) => {
         return {
@@ -879,9 +879,7 @@ class Store {
   _callRemoveLiquidityBasePool = async (web3, account, pool, amountToSend, callback) => {
     const basePoolContract = new web3.eth.Contract(config.basePoolABI, pool.address)
 
-    //calcualte minimum amounts ?
-
-    debugger
+    // remove all ??
     basePoolContract.methods.remove_liquidity(amountToSend, [0, 0, 0]).send({ from: account.address})
     .on('transactionHash', function(hash){
       emitter.emit(SNACKBAR_TRANSACTION_HASH, hash)

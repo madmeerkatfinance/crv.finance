@@ -669,7 +669,7 @@ class ThreePool extends Component {
     const { classes } = this.props;
 
     const { depositAmount, slippagePcent, selectedPool } = this.state;
-    console.log(depositAmount)
+    // console.log(depositAmount)
     let amount = depositAmount;
     if (!depositAmount) amount = 0.0;
     if (selectedPool && !selectedPool.isPoolSeeded) return null;
