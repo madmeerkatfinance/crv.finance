@@ -265,8 +265,9 @@ class AddPool extends Component {
     const pools = store.getStore('pools')
     const basePools = store.getStore('basePools')
 
-    const selectedBasePool = basePools && basePools.length > 0 ? basePools[0] : null
-
+    const selectedBasePool =
+      basePools && basePools.length > 0 ? basePools[0] : null;
+    
     this.state = {
       account: store.getStore('account'),
       assetInfo: null,

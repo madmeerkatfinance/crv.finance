@@ -1065,7 +1065,7 @@ class Store {
   _callDeployMetapool = async (web3, account, basePool, address, name, symbol, a, fee, callback) => {
     const curveFactoryContract = new web3.eth.Contract(config.curveFactoryV2ABI, config.curveFactoryV2Address)
 
-    curveFactoryContract.methods.deploy_metapool(basePool.erc20address, name, symbol, address, '10', '4000000').send({ from: account.address})
+    curveFactoryContract.methods.deploy_metapool(basePool.address, name, symbol, address, '10', '4000000').send({ from: account.address})
     .on('transactionHash', function(hash){
       emitter.emit(SNACKBAR_TRANSACTION_HASH, hash)
       callback(null, hash)
