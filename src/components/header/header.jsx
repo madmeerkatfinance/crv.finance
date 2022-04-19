@@ -239,7 +239,7 @@ class Header extends Component {
   };
 
   nav = (screen) => {
-    this.props.history.push("/" + screen);
+    this.props.history.push("/" + screen.toLowerCase());
   };
 
   addressClicked = () => {
