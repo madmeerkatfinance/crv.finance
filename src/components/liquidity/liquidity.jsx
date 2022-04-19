@@ -311,7 +311,7 @@ class Liquidity extends Component {
     return Object.assign(
       {},
       ...selectedPool.assets.map(({ symbol, balance, decimals }) => ({
-        [`${symbol}Amount`]: floatToFixed(balance, decimals),
+        [`${symbol}Amount`]: floatToFixed("", decimals),
       }))
     );
   };
@@ -529,7 +529,6 @@ class Liquidity extends Component {
 
   renderPoolSelectAssetOptions = (option) => {
     const { classes } = this.props;
-
     return (
       <MenuItem
         key={option.id}
@@ -767,7 +766,7 @@ class Liquidity extends Component {
 
     const amount = this.state[type + "Amount"];
     const amountError = this.state[type + "AmountError"];
-
+    // console.log(amount, amountError);
     return (
       <div className={classes.valContainer}>
         <div className={classes.flexy}>
@@ -965,7 +964,7 @@ class Liquidity extends Component {
       this.setState({ loading: true });
       dispatcher.dispatch({
         type: DEPOSIT,
-        content: { pool: selectedPool, amounts: amounts },
+        content: { pool: selectedPool, amounts: amounts.map((amount) => (amount === "" || isNaN(amount) ? 0 : amount)) },
       });
     }
   };

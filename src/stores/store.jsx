@@ -605,11 +605,9 @@ class Store {
         (asset, index) => { return this._checkApproval2(asset, account, amounts[index], pool.liquidityAddress) }
       ))
 
-      console.log(approvals)
-
       const amountsBN = amounts.map((amount, index) => {
 
-        let amountToSend = web3.utils.toWei(amount, "ether")
+        let amountToSend = web3.utils.toWei(amount.toString(), "ether")
         if (pool.assets[index].decimals !== 18) {
           const decimals = new BigNumber(10)
             .pow(pool.assets[index].decimals)
