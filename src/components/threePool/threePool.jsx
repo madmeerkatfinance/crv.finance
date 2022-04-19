@@ -246,8 +246,7 @@ class ThreePool extends Component {
       loading: !(
         basePools &&
         basePools.length > 0 &&
-        basePools[0].assets.length > 0 &&
-        false
+        basePools[0].assets.length > 0 
       ),
       activeTab: "deposit",
     };
