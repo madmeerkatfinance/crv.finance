@@ -360,13 +360,12 @@ class Store {
   _getPoolsV2 = async (web3) => {
     try {
       const curveFactoryContract = new web3.eth.Contract(config.curveFactoryV2ABI, config.curveFactoryV2Address)
-      // console.log('curveFactoryContract', curveFactoryContract)
       const poolCount = await curveFactoryContract.methods.pool_count().call()
 
       const pools = await Promise.all([...Array(parseInt(poolCount)).keys()].map(
         i => curveFactoryContract.methods.pool_list(i).call()
       ))
-      console.log("pools", pools, poolCount)
+      // console.log("pools", pools, poolCount)
 
       return pools.map((poolAddress) => {
         return {
@@ -481,19 +480,19 @@ class Store {
           return emitter.emit(SNACKBAR_ERROR, err)
         }
 
-        let liquidityAddress = ''
-        let liquidityABI = ''
+        let liquidityAddress = config.usdDepositerAddress
+        let liquidityABI = config.usdDepositerABI
 
-        console.log(assets)
-        const basePools = store.getStore('basePools')
+        // console.log(assets)
+        // const basePools = store.getStore('basePools')
 
-        if(assets[1].erc20address.toLowerCase() === '0x6B175474E89094C44Da98b954EedeAC495271d0F'.toLowerCase()) {
-          liquidityAddress = config.usdDepositerAddress
-          liquidityABI = config.usdDepositerABI
-        } else {
-          liquidityAddress = config.btcDepositerAddress
-          liquidityABI = config.btcDepositerABI
-        }
+        // if(assets[1].erc20address.toLowerCase() === '0x6B175474E89094C44Da98b954EedeAC495271d0F'.toLowerCase()) {
+        //   liquidityAddress = config.usdDepositerAddress
+        //   liquidityABI = config.usdDepositerABI
+        // } else {
+        //   liquidityAddress = config.btcDepositerAddress
+        //   liquidityABI = config.btcDepositerABI
+        // }
         callback(null, {
           version: pool.version,
           address: pool.address,
@@ -915,7 +914,6 @@ class Store {
           .times(decimals)
           .toFixed(0)
       }
-
       const metapoolContract = new web3.eth.Contract(config.metapoolABI, pool.address)
       const amountToReceive = await metapoolContract.methods.get_dy_underlying(from.index, to.index, amountToSend).call()
 
@@ -1091,7 +1089,7 @@ class Store {
       const web3 = await this._getWeb3Provider()
 
       const amountsBN = amounts.map((amount, index) => {
-        let amountToSend = web3.utils.toWei(amount, "ether")
+        let amountToSend = web3.utils.toWei(amount || "0", "ether")
         if (pool.assets[index].decimals !== 18) {
           const decimals = new BigNumber(10)
             .pow(pool.assets[index].decimals)
