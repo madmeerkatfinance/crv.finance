@@ -392,21 +392,21 @@ class Store {
   }
 
   _getCoinData = memoize(async ({ web3, filteredCoins, coinAddress, accountAddress }) => {
-    // console.log(filteredCoins, coinAddress)
     const erc20Contract0 = new web3.eth.Contract(config.erc20ABI, coinAddress)
-
+    
     const symbol0 = await erc20Contract0.methods.symbol().call()
     const decimals0 = parseInt(await erc20Contract0.methods.decimals().call())
     const name0 = await erc20Contract0.methods.name().call()
-
+    
     let balance0 = await erc20Contract0.methods.balanceOf(accountAddress).call()
     const bnDecimals0 = new BigNumber(10)
-      .pow(decimals0)
-
+    .pow(decimals0)
+    
     balance0 = new BigNumber(balance0)
-      .dividedBy(bnDecimals0)
-      .toFixed(decimals0, BigNumber.ROUND_DOWN)
-
+    .dividedBy(bnDecimals0)
+    .toFixed(decimals0, BigNumber.ROUND_DOWN)
+    
+    // console.log(filteredCoins, coinAddress, filteredCoins.indexOf(coinAddress))
     return {
       index: filteredCoins.indexOf(coinAddress),
       erc20address: coinAddress,
@@ -417,7 +417,7 @@ class Store {
     }
   }, {
     promise: true,
-    normalizer: ([{ coinAddress, accountAddress }]) => `${coinAddress}-${accountAddress}`,
+    normalizer: ([{ coinAddress, accountAddress, filteredCoins }]) => `${coinAddress}-${accountAddress}-${filteredCoins.length}`,
   })
 
   _getPoolData = async (web3, pool, account, callback) => {
@@ -903,7 +903,7 @@ class Store {
   getSwapAmount = async (payload) => {
     try {
       const { pool, from, to, amount } = payload.content
-      const account = store.getStore('account')
+      // const account = store.getStore('account')
       const web3 = await this._getWeb3Provider()
 
       let amountToSend = web3.utils.toWei(amount, "ether")
