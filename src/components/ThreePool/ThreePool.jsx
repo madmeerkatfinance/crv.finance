@@ -246,7 +246,7 @@ class ThreePool extends Component {
       loading: !(
         basePools &&
         basePools.length > 0 &&
-        basePools[0].assets.length > 0
+        basePools[0].assets.length > 0 && false
       ),
       activeTab: "deposit",
     };
@@ -636,7 +636,7 @@ class ThreePool extends Component {
   renderDeposit = () => {
     const { classes } = this.props;
     const { loading, pools, pool, selectedPool } = this.state;
-
+    console.log("loading", loading)
     return (
       <React.Fragment>
         {this.renderPoolSelect("deposit")}
