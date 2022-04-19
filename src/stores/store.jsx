@@ -392,6 +392,7 @@ class Store {
   }
 
   _getCoinData = memoize(async ({ web3, filteredCoins, coinAddress, accountAddress }) => {
+    // console.log(filteredCoins, coinAddress)
     const erc20Contract0 = new web3.eth.Contract(config.erc20ABI, coinAddress)
 
     const symbol0 = await erc20Contract0.methods.symbol().call()
@@ -539,7 +540,7 @@ class Store {
         try {
           const returnCoin = await this._getCoinData({
             web3,
-            filteredCoins: pool.assets,
+            filteredCoins: pool.assets.map(x => x.erc20address),
             coinAddress: coin.erc20address,
             accountAddress: account.address,
           });
@@ -915,6 +916,7 @@ class Store {
           .toFixed(0)
       }
       const metapoolContract = new web3.eth.Contract(config.metapoolABI, pool.address)
+      // console.log(from.index, to.index, amountToSend)
       const amountToReceive = await metapoolContract.methods.get_dy_underlying(from.index, to.index, amountToSend).call()
 
       const receiveAmount = amountToReceive/10**to.decimals
@@ -983,6 +985,7 @@ class Store {
       .dividedBy(100)
       .toFixed(0)
 
+    // console.log(from.index, to.index, amountToSend, receive);
     metapoolContract.methods.exchange_underlying(from.index, to.index, amountToSend, receive).send({ from: account.address})
     .on('transactionHash', function(hash){
       emitter.emit(SNACKBAR_TRANSACTION_HASH, hash)

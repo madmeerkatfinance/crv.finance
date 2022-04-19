@@ -665,7 +665,7 @@ class Swap extends Component {
     } = this.state
 
     if (!selectedPool.isPoolSeeded) return
-
+    
     const from = selectedPool.assets.filter((asset) => {
       return asset.symbol === fromAsset
     })[0]
@@ -686,6 +686,8 @@ class Swap extends Component {
     if(!fromAmount || isNaN(fromAmount) || fromAmount <= 0) {
       return false
     }
+
+    // debugger
 
     dispatcher.dispatch({ type: GET_SWAP_AMOUNT, content: { pool: selectedPool, from: from, to: to, amount: fromAmount } })
   }
