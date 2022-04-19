@@ -320,13 +320,14 @@ class Store {
       (pool, callback) => {
         this._getBasePoolData(web3, pool, account, callback);
       },
-      (err, poolData) => {
+      (err, basePoolData) => {
         if (err) {
           emitter.emit(ERROR, err);
           return emitter.emit(SNACKBAR_ERROR, err);
         }
 
-        store.setStore({ basePools: poolData });
+        store.setStore({ basePools: basePoolData });
+        console.log(BASE_POOL_CONFIGURE_RETURNED)
         return emitter.emit(BASE_POOL_CONFIGURE_RETURNED);
       }
     );
@@ -583,12 +584,6 @@ class Store {
       balance = new BigNumber(balance)
         .dividedBy(bnDecimals)
         .toFixed(decimals, BigNumber.ROUND_DOWN);
-
-      // const basePoolContract = new web3.eth.Contract(config.basePoolABI, pool.address)
-      // let daiBalance = await basePoolContract.methods.balances(0).call();
-      // let usdcBalance = await basePoolContract.methods.balances(1).call();
-      // let usdtBalance = await basePoolContract.methods.balances(2).call();
-      // console.log(daiBalance, usdcBalance, usdtBalance)
 
       async.map(
         pool.assets,

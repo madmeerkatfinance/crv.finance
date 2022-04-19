@@ -4,7 +4,7 @@ import { withStyles } from "@material-ui/core/styles";
 import PoolSeedingCTA from "../poolSeedingCTA/poolSeedingCTA";
 import { Typography, TextField, MenuItem, Button } from "@material-ui/core";
 import { colors } from "../../theme/theme";
-import { Alert } from '@material-ui/lab'
+import { Alert } from "@material-ui/lab";
 
 import Loader from "../loader/loader";
 import SlippageInfo from "../slippageInfo/slippageInfo";
@@ -246,7 +246,8 @@ class ThreePool extends Component {
       loading: !(
         basePools &&
         basePools.length > 0 &&
-        basePools[0].assets.length > 0 && false
+        basePools[0].assets.length > 0 &&
+        false
       ),
       activeTab: "deposit",
     };
@@ -299,7 +300,7 @@ class ThreePool extends Component {
       loading: false,
       ...this.getStateSliceUserBalancesForSelectedPool(selectedPool),
     };
-
+    console.log("configure returned");
     this.setState(newStateSlice);
 
     if (!selectedPool) return;
@@ -391,10 +392,24 @@ class ThreePool extends Component {
       <div className={classes.root}>
         <div className={classes.inputContainer}>
           <div>
-            <Typography variant='h2' align='center' className={ classes.poolInfoHeader }>Create 3MM LP</Typography>
+            <Typography
+              variant="h2"
+              align="center"
+              className={classes.poolInfoHeader}
+            >
+              Create 3MM LP
+            </Typography>
             <div style={{ marginBottom: 10 }}></div>
             <Alert icon={false} className={classes.infoAlert}>
-              Add DAI, USDC, and USDT to get 3MM LP. You can stake stablecoin 3MM LPs for high APR at <a href="https://mm.finance" target="_blank" rel="noopener noreferrer">MM Finance</a>
+              Add DAI, USDC, and USDT to get 3MM LP. You can stake stablecoin
+              3MM LPs for high APR at{" "}
+              <a
+                href="https://mm.finance"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                MM Finance
+              </a>
             </Alert>
             <div style={{ marginBottom: 20 }}></div>
           </div>
@@ -452,7 +467,7 @@ class ThreePool extends Component {
                 variant="h4"
                 onClick={() => {
                   this.setAmount(
-                    "pool",
+                    "Pool",
                     selectedPool
                       ? floatToFixed(
                           selectedPool.balance,
@@ -636,7 +651,7 @@ class ThreePool extends Component {
   renderDeposit = () => {
     const { classes } = this.props;
     const { loading, pools, pool, selectedPool } = this.state;
-    console.log("loading", loading)
+    console.log("loading", loading);
     return (
       <React.Fragment>
         {this.renderPoolSelect("deposit")}
@@ -689,7 +704,27 @@ class ThreePool extends Component {
           <div className={classes.label}>
             <Typography variant="h4">Receive</Typography>
           </div>
-          <div className={classes.balances}></div>
+          <div className={classes.balances}>
+            <Typography
+              variant="h4"
+              onClick={() => {
+                this.setAmount(
+                  "Pool",
+                  selectedPool
+                    ? floatToFixed(selectedPool.balance, selectedPool.decimals)
+                    : "0"
+                );
+              }}
+              className={classes.value}
+              noWrap
+            >
+              {"" +
+                (selectedPool && selectedPool.balance
+                  ? floatToFixed(selectedPool.balance, 4)
+                  : "0.0000")}{" "}
+              {selectedPool ? selectedPool.id : ""}
+            </Typography>
+          </div>
         </div>
         <div>
           <TextField
@@ -764,11 +799,11 @@ class ThreePool extends Component {
     const { loading } = this.state;
 
     let type = asset.symbol;
-    
+
     const amount = this.state[type + "Amount"];
     const amountError = this.state[type + "AmountError"];
     // console.log(amount);
-    
+
     return (
       <div className={classes.valContainer}>
         <div className={classes.flexy}>
