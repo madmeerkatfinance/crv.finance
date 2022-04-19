@@ -346,8 +346,9 @@ class AddPool extends Component {
     return (
       <div className={ classes.root }>
         <div className={ classes.inputContainer }>
-          <Typography variant='h2' align='center' className={ classes.poolInfoHeader }>Setup</Typography>
+          <Typography variant='h2' align='center' className={ classes.poolInfoHeader }>Create USD Metapool</Typography>
           <Alert icon={false} className={classes.infoAlert}>
+            This page is mostly used for devs that wish to create a new variant of stablecoin against MM Finance's stablecoin liquidity. <br /><br />
             Note: The factory does not support tokens with transfer fees.<br /><a href="https://curve.readthedocs.io/factory-deployer.html#limitations" target="_blank" rel="noopener noreferrer">Read all expected behaviors and limitations</a>
           </Alert>
           { this.renderInput('name') }

@@ -4,6 +4,7 @@ import { withStyles } from "@material-ui/core/styles";
 import PoolSeedingCTA from "../poolSeedingCTA";
 import { Typography, TextField, MenuItem, Button } from "@material-ui/core";
 import { colors } from "../../theme";
+import { Alert } from '@material-ui/lab'
 
 import Loader from "../loader";
 import SlippageInfo from "../slippageInfo";
@@ -384,6 +385,14 @@ class Liquidity extends Component {
     return (
       <div className={classes.root}>
         <div className={classes.inputContainer}>
+          <div>
+            <Typography variant='h2' align='center' className={ classes.poolInfoHeader }>Add Liquidity</Typography>
+            <div style={{ marginBottom: 10 }}></div>
+            <Alert icon={false} className={classes.infoAlert}>
+              Add liquidity to a stablecoin pool of your choice. Generally, you should put in the same amounts of each token to minimize slippage.
+            </Alert>
+            <div style={{ marginBottom: 20 }}></div>
+          </div>
           <div className={classes.toggleContainer}>
             <Typography
               variant="h3"
@@ -537,14 +546,6 @@ class Liquidity extends Component {
             ""
           )}
         </div>
-        <Typography
-          variant="h5"
-          className={`${
-            option.version === 1 ? classes.version1 : classes.version2
-          }`}
-        >
-          version {option.version}
-        </Typography>
       </MenuItem>
     );
   };
@@ -585,7 +586,7 @@ class Liquidity extends Component {
             disabled={loading}
             className={classes.actionInput}
             placeholder={"Select"}
-            helperText={"Deposits are closed for V1 pools"}
+            helperText={"Please select a pool that you wish to add liquidity to"}
           >
             {pools
               ? pools

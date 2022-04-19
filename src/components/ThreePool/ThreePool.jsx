@@ -4,6 +4,7 @@ import { withStyles } from "@material-ui/core/styles";
 import PoolSeedingCTA from "../poolSeedingCTA/poolSeedingCTA";
 import { Typography, TextField, MenuItem, Button } from "@material-ui/core";
 import { colors } from "../../theme/theme";
+import { Alert } from '@material-ui/lab'
 
 import Loader from "../loader/loader";
 import SlippageInfo from "../slippageInfo/slippageInfo";
@@ -389,6 +390,14 @@ class ThreePool extends Component {
     return (
       <div className={classes.root}>
         <div className={classes.inputContainer}>
+          <div>
+            <Typography variant='h2' align='center' className={ classes.poolInfoHeader }>Create 3MM LP</Typography>
+            <div style={{ marginBottom: 10 }}></div>
+            <Alert icon={false} className={classes.infoAlert}>
+              Add DAI, USDC, and USDT to get 3MM LP. You can stake stablecoin 3MM LPs for high APR at <a href="https://mm.finance" target="_blank" rel="noopener noreferrer">MM Finance</a>
+            </Alert>
+            <div style={{ marginBottom: 20 }}></div>
+          </div>
           <div className={classes.toggleContainer}>
             <Typography
               variant="h3"
@@ -542,14 +551,14 @@ class ThreePool extends Component {
             ""
           )}
         </div>
-        <Typography
+        {/* <Typography
           variant="h5"
           className={`${
             option.version === 1 ? classes.version1 : classes.version2
           }`}
         >
           version {option.version}
-        </Typography>
+        </Typography> */}
       </MenuItem>
     );
   };

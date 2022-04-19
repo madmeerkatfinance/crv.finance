@@ -9,6 +9,7 @@ import {
 } from '@material-ui/core';
 import SwapVertIcon from '@material-ui/icons/SwapVert';
 import { colors } from '../../theme'
+import { Alert } from '@material-ui/lab'
 
 import Loader from '../loader'
 import RateInfo from '../rateInfo'
@@ -371,6 +372,14 @@ class Swap extends Component {
     return (
       <div className={ classes.root }>
         <div className={ classes.inputContainer }>
+        <div>
+            <Typography variant='h2' align='center' className={ classes.poolInfoHeader }>Swap</Typography>
+            <div style={{ marginBottom: 10 }}></div>
+            <Alert icon={false} className={classes.infoAlert}>
+              Perform a token swap between different tokens. First, select the stablecoin pool that you wish to perform a trade against.
+            </Alert>
+            <div style={{ marginBottom: 20 }}></div>
+          </div>
           { this.renderPoolSelect() }
           {(selectedPool && !selectedPool.isPoolSeeded) &&
             <PoolSeedingCTA pool={selectedPool} />}
@@ -413,7 +422,7 @@ class Swap extends Component {
       <div className={ classes.valContainer }>
         <div className={ classes.flexy }>
           <div className={ classes.label }>
-            <Typography variant='h4'>pool</Typography>
+            <Typography variant='h4'>Pool</Typography>
           </div>
           <div className={ classes.balances }>
           </div>
@@ -456,7 +465,7 @@ class Swap extends Component {
       <MenuItem key={option.id} value={option.id} className={ classes.assetSelectMenu }>
         <div className={ classes.poolSelectOption }>
           <Typography variant='h4'>{ option.name }</Typography>
-          <Typography variant='h5' className={`${ option.version === 1 ? classes.version1 : classes.version2 }`}>version { option.version }</Typography>
+          {/* <Typography variant='h5' className={`${ option.version === 1 ? classes.version1 : classes.version2 }`}>version { option.version }</Typography> */}
         </div>
       </MenuItem>
     )
@@ -477,7 +486,7 @@ class Swap extends Component {
 
     let asset = null
 
-    if(selectedPool && selectedPool.assets) {
+    if (selectedPool && selectedPool.assets) {
       asset = selectedPool.assets.filter((asset) => { return asset.symbol === that.state[type+"Asset"] })
       if(asset.length > 0) {
         asset = asset[0]
@@ -493,7 +502,7 @@ class Swap extends Component {
       <div className={ classes.valContainer }>
         <div className={ classes.flexy }>
           <div className={ classes.label }>
-            <Typography variant='h4'>{ type }</Typography>
+            <Typography style={{ textTransform: "capitalize" }} variant='h4'>{ type }</Typography>
           </div>
           <div className={ classes.balances }>
             { (asset ? (<Typography variant='h4' onClick={ () => { this.setAmount(asset.symbol, type, (asset ? floatToFixed(asset.balance, asset.decimals) : '0')) } } className={ classes.value } noWrap>{ 'Balance: '+ ( asset && asset.balance ? floatToFixed(asset.balance, 4) : '0.0000') } { asset ? asset.symbol : '' }</Typography>) : <Typography variant='h4' className={ classes.value } noWrap>Balance: -</Typography>) }
