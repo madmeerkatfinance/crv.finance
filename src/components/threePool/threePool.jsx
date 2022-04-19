@@ -706,14 +706,6 @@ class ThreePool extends Component {
           <div className={classes.balances}>
             <Typography
               variant="h4"
-              onClick={() => {
-                this.setAmount(
-                  "Pool",
-                  selectedPool
-                    ? floatToFixed(selectedPool.balance, selectedPool.decimals)
-                    : "0"
-                );
-              }}
               className={classes.value}
               noWrap
             >
