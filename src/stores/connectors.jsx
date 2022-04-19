@@ -10,6 +10,7 @@ import { PortisConnector } from "@web3-react/portis-connector";
 import { SquarelinkConnector } from "@web3-react/squarelink-connector";
 import { TorusConnector } from "@web3-react/torus-connector";
 import { AuthereumConnector } from "@web3-react/authereum-connector";
+import { DeFiWeb3Connector } from "deficonnect";
 
 const POLLING_INTERVAL = 12000;
 const RPC_URLS = {
@@ -26,6 +27,12 @@ export const walletconnect = new WalletConnectConnector({
   rpc: { 25: RPC_URLS[25] },
   bridge: "https://bridge.walletconnect.org",
   qrcode: true,
+  pollingInterval: POLLING_INTERVAL,
+});
+
+export const deficonnect = new DeFiWeb3Connector({
+  supportedChainIds: [25],
+  rpc: { 25: "https://rpc.xstaking.sg" },
   pollingInterval: POLLING_INTERVAL,
 });
 
@@ -52,17 +59,17 @@ export const frame = new FrameConnector({ supportedChainIds: [1] });
 
 export const fortmatic = new FortmaticConnector({
   apiKey: "pk_live_F95FEECB1BE324B5",
-  chainId: 1
+  chainId: 1,
 });
 
 export const portis = new PortisConnector({
   dAppId: "5dea304b-33ed-48bd-8f00-0076a2546b60",
-  networks: [1, 100]
+  networks: [1, 100],
 });
 
 export const squarelink = new SquarelinkConnector({
   clientId: "5f2a2233db82b06b24f9",
-  networks: [1, 100]
+  networks: [1, 100],
 });
 
 export const torus = new TorusConnector({ chainId: 25 });
