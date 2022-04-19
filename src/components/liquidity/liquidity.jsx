@@ -627,14 +627,14 @@ class Liquidity extends Component {
             </div>
             <div className={classes.assetSelectIconName}>
               <Typography variant="h4">{option.name}</Typography>
-              <Typography
+              {/* <Typography
                 variant="h5"
                 className={`${
                   option.version === 1 ? classes.version1 : classes.version2
                 }`}
               >
                 version {option.version}
-              </Typography>
+              </Typography> */}
             </div>
           </div>
         </React.Fragment>
