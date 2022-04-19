@@ -4,7 +4,7 @@ import { withStyles } from "@material-ui/core/styles";
 import PoolSeedingCTA from "../poolSeedingCTA";
 import { Typography, TextField, MenuItem, Button } from "@material-ui/core";
 import { colors } from "../../theme";
-import { Alert } from '@material-ui/lab'
+import { Alert } from "@material-ui/lab";
 
 import Loader from "../loader";
 import SlippageInfo from "../slippageInfo";
@@ -386,10 +386,17 @@ class Liquidity extends Component {
       <div className={classes.root}>
         <div className={classes.inputContainer}>
           <div>
-            <Typography variant='h2' align='center' className={ classes.poolInfoHeader }>Add Liquidity</Typography>
+            <Typography
+              variant="h2"
+              align="center"
+              className={classes.poolInfoHeader}
+            >
+              Add Liquidity
+            </Typography>
             <div style={{ marginBottom: 10 }}></div>
             <Alert icon={false} className={classes.infoAlert}>
-              Add liquidity to a stablecoin pool of your choice. Generally, you should put in the same amounts of each token to minimize slippage.
+              Add liquidity to a stablecoin pool of your choice. Generally, you
+              should put in the same amounts of each token to minimize slippage.
             </Alert>
             <div style={{ marginBottom: 20 }}></div>
           </div>
@@ -585,7 +592,9 @@ class Liquidity extends Component {
             disabled={loading}
             className={classes.actionInput}
             placeholder={"Select"}
-            helperText={"Please select a pool that you wish to add liquidity to"}
+            helperText={
+              "Please select a pool that you wish to add liquidity to"
+            }
           >
             {pools
               ? pools
@@ -688,7 +697,27 @@ class Liquidity extends Component {
           <div className={classes.label}>
             <Typography variant="h4">Receive</Typography>
           </div>
-          <div className={classes.balances}></div>
+          <div className={classes.balances}>
+            <Typography
+              variant="h4"
+              onClick={() => {
+                this.setAmount(
+                  "Pool",
+                  selectedPool
+                    ? floatToFixed(selectedPool.balance, selectedPool.decimals)
+                    : "0"
+                );
+              }}
+              className={classes.value}
+              noWrap
+            >
+              {"" +
+                (selectedPool && selectedPool.balance
+                  ? floatToFixed(selectedPool.balance, 4)
+                  : "0.0000")}{" "}
+              {selectedPool ? selectedPool.id : ""}
+            </Typography>
+          </div>
         </div>
         <div>
           <TextField
@@ -964,7 +993,12 @@ class Liquidity extends Component {
       this.setState({ loading: true });
       dispatcher.dispatch({
         type: DEPOSIT,
-        content: { pool: selectedPool, amounts: amounts.map((amount) => (amount === "" || isNaN(amount) ? 0 : amount)) },
+        content: {
+          pool: selectedPool,
+          amounts: amounts.map((amount) =>
+            amount === "" || isNaN(amount) ? 0 : amount
+          ),
+        },
       });
     }
   };
