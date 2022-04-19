@@ -12,7 +12,7 @@ import Disclaimer from "./components/disclaimer";
 import SnackbarController from "./components/snackbar";
 import Account from "./components/account";
 import Swap from "./components/swap";
-import ThreePool from "./components/threePool/threePool";
+import ThreePool from "./components/threePool";
 import Liquidity from "./components/liquidity";
 import AddPool from "./components/addPool";
 import bg from "./assets/meerkat_light.png";
