@@ -9,7 +9,8 @@ const styles = () => ({
     marginTop: "12px",
   },
   infoAlert: {
-    backgroundColor: colors.white,
+    backgroundColor: colors.lightRed,
+    color: colors.black,
   },
 });
 
