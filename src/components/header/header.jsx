@@ -4,6 +4,12 @@ import { Typography } from "@material-ui/core";
 import { withRouter } from "react-router-dom";
 import { colors } from "../../theme";
 import logo from "../../assets/logo.svg";
+import logoWord from "../../assets/logo-word.svg";
+import twitter from "../../assets/socials/twitter.svg";
+import discord from "../../assets/socials/discord.svg";
+import medium from "../../assets/socials/medium.svg";
+import telegram from "../../assets/socials/telegram.svg";
+
 import { CONNECTION_CONNECTED, CONNECTION_DISCONNECTED } from "../../constants";
 
 import UnlockModal from "../unlock/unlockModal.jsx";
@@ -60,6 +66,28 @@ const styles = (theme) => ({
       borderBottom: "3px solid " + colors.borderBlue,
     },
   },
+  mmfLink: {
+    padding: "12px 0px",
+    margin: "0px 12px",
+    cursor: "pointer",
+    "&:hover": {
+      paddingBottom: "9px",
+      borderBottom: "3px solid " + colors.borderBlue,
+    },
+    [theme.breakpoints.down("sm")]: {
+      display: "none",
+    },
+  },
+  docLink: {
+    color: "gray",
+    padding: "12px 0px",
+    margin: "0px 12px",
+    cursor: "not-allowed",
+    "&:hover": {
+      paddingBottom: "9px",
+      borderBottom: "3px solid " + colors.borderBlue,
+    },
+  },
   title: {
     textTransform: "capitalize",
   },
@@ -77,6 +105,14 @@ const styles = (theme) => ({
     flex: 1,
     [theme.breakpoints.down("sm")]: {
       flex: "0",
+    },
+  },
+  socials: {
+    cursor: "pointer",
+    marginLeft: "8px",
+    marginRight: "8px",
+    [theme.breakpoints.down("sm")]: {
+      display: "none",
     },
   },
   walletAddress: {
@@ -180,14 +216,69 @@ class Header extends Component {
               onClick={ () => { this.nav('') } }
             /> */}
             <img src={logo} alt="logo" height="50px" />
+            <img src={logoWord} alt="logo-word" height="50px" />
           </div>
           <div className={classes.links} style={{ color: colors.white }}>
+            <div
+              className={classes.mmfLink}
+              onClick={() => {
+                window.open("https://mm.finance", "_blank");
+              }}
+            >
+              <Typography variant={"h4"} className={`title`}>
+                MM.Finance
+              </Typography>
+            </div>
             {this.renderLink("Swap")}
             {this.renderLink("3MM")}
             {this.renderLink("Liquidity")}
             {this.renderLink("Create")}
+            <div className={classes.docLink}>
+              <Typography variant={"h4"} className={`title`}>
+                Doc
+              </Typography>
+            </div>
           </div>
+
           <div className={classes.account}>
+            <div style={{ marginRight: "24px" }}>
+              <img
+                src={twitter}
+                alt="twitter"
+                height="28px"
+                className={classes.socials}
+                onClick={() => {
+                  window.open("https://twitter.com/MMFcrypto", "_blank");
+                }}
+              />
+              <img
+                src={discord}
+                alt="discord"
+                height="28px"
+                className={classes.socials}
+                onClick={() => {
+                  window.open("https://discord.gg/madmeerkat", "_blank");
+                }}
+              />
+              <img
+                src={telegram}
+                alt="telegram"
+                height="28px"
+                className={classes.socials}
+                onClick={() => {
+                  window.open("https://t.me/MMFcrypto", "_blank");
+                }}
+              />
+              <img
+                src={medium}
+                alt="medium"
+                height="26px"
+                className={classes.socials}
+                onClick={() => {
+                  window.open("https://medium.com/@MMFinance", "_blank");
+                }}
+              />
+            </div>
             {address && (
               <Typography
                 variant={"h4"}
@@ -218,11 +309,10 @@ class Header extends Component {
 
   renderLink = (screen) => {
     const { classes } = this.props;
-
     return (
       <div
         className={
-          window.location.pathname === "/" + screen ||
+          window.location.pathname === "/" + screen?.toLowerCase() ||
           (screen === "swap" && window.location.pathname === "/")
             ? classes.linkActive
             : classes.link

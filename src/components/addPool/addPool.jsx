@@ -1,16 +1,11 @@
 import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
-import { Alert } from '@material-ui/lab'
-import { withStyles } from '@material-ui/core/styles';
-import {
-  Typography,
-  TextField,
-  MenuItem,
-  Button,
-} from '@material-ui/core';
-import { colors } from '../../theme'
+import { Alert } from "@material-ui/lab";
+import { withStyles } from "@material-ui/core/styles";
+import { Typography, TextField, MenuItem, Button } from "@material-ui/core";
+import { colors } from "../../theme";
 
-import Loader from '../loader'
+import Loader from "../loader";
 
 import {
   ERROR,
@@ -18,274 +13,274 @@ import {
   GET_ASSET_INFO,
   GET_ASSET_INFO_RETURNED,
   ADD_POOL,
-  ADD_POOL_RETURNED
-} from '../../constants'
+  ADD_POOL_RETURNED,
+} from "../../constants";
 
 import Store from "../../stores";
-const emitter = Store.emitter
-const dispatcher = Store.dispatcher
-const store = Store.store
+const emitter = Store.emitter;
+const dispatcher = Store.dispatcher;
+const store = Store.store;
 
-const styles = theme => ({
+const styles = (theme) => ({
   root: {
     flex: 1,
-    display: 'flex',
-    flexDirection: 'column',
-    maxWidth: '900px',
-    width: '100%',
-    justifyContent: 'flex-start',
-    alignItems: 'center'
+    display: "flex",
+    flexDirection: "column",
+    maxWidth: "900px",
+    width: "100%",
+    justifyContent: "flex-start",
+    alignItems: "center",
   },
   inputContainer: {
-    display: 'flex',
-    padding: '30px',
-    borderRadius: '1rem',
-    flexDirection: 'column',
-    alignItems: 'flex-start',
-    justifyContent: 'flex-start',
-    margin: '40px 0px',
+    display: "flex",
+    padding: "30px",
+    borderRadius: "1rem",
+    flexDirection: "column",
+    alignItems: "flex-start",
+    justifyContent: "flex-start",
+    margin: "40px 0px",
     // border: '1px solid '+colors.borderBlue,
-    boxShadow: '0 10px 15px -3px rgba(56,189,248,0.1),0 4px 6px -2px rgba(56,189,248,0.05)',
-    maxWidth: '500px',
-    width: '80%',
-    background: colors.white
+    boxShadow:
+      "0 10px 15px -3px rgba(56,189,248,0.1),0 4px 6px -2px rgba(56,189,248,0.05)",
+    maxWidth: "500px",
+    width: "80%",
+    background: colors.white,
   },
   inputCardHeading: {
-    width: '100%',
+    width: "100%",
     color: colors.darkGray,
-    paddingLeft: '12px'
+    paddingLeft: "12px",
   },
   valContainer: {
-    display: 'flex',
-    flexDirection: 'column',
-    width: '100%',
-    marginBottom: '24px'
+    display: "flex",
+    flexDirection: "column",
+    width: "100%",
+    marginBottom: "24px",
   },
   balances: {
-    textAlign: 'right',
-    paddingRight: '20px',
-    cursor: 'pointer'
+    textAlign: "right",
+    paddingRight: "20px",
+    cursor: "pointer",
   },
   assetSelectMenu: {
-    padding: '15px 15px 15px 20px',
-    minWidth: '300px',
-    display: 'flex'
+    padding: "15px 15px 15px 20px",
+    minWidth: "300px",
+    display: "flex",
   },
   assetSelectIcon: {
-    display: 'inline-block',
-    verticalAlign: 'middle',
-    borderRadius: '25px',
-    background: '#dedede',
-    height: '30px',
-    width: '30px',
-    textAlign: 'center',
-    cursor: 'pointer'
+    display: "inline-block",
+    verticalAlign: "middle",
+    borderRadius: "25px",
+    background: "#dedede",
+    height: "30px",
+    width: "30px",
+    textAlign: "center",
+    cursor: "pointer",
   },
   assetSelectIconName: {
-    paddingLeft: '10px',
-    display: 'inline-block',
-    verticalAlign: 'middle',
-    flex: 1
+    paddingLeft: "10px",
+    display: "inline-block",
+    verticalAlign: "middle",
+    flex: 1,
   },
   assetSelectBalance: {
-    paddingLeft: '24px'
+    paddingLeft: "24px",
   },
   assetAdornment: {
-    color: colors.text + ' !important'
+    color: colors.text + " !important",
   },
   assetContainer: {
-    minWidth: '120px'
+    minWidth: "120px",
   },
   actionButton: {
-    '&:hover': {
+    "&:hover": {
       backgroundColor: "#681DFF",
     },
-    marginTop: '24px',
-    padding: '12px',
+    marginTop: "24px",
+    padding: "12px",
     backgroundColor: "#681DFF",
-    borderRadius: '1rem',
-    border: '1px solid #E1E1E1',
+    borderRadius: "1rem",
+    border: "1px solid #E1E1E1",
     fontWeight: 500,
-    [theme.breakpoints.up('md')]: {
-      padding: '15px',
-    }
+    [theme.breakpoints.up("md")]: {
+      padding: "15px",
+    },
   },
   buttonText: {
-    fontWeight: '700',
-    color: 'white',
+    fontWeight: "700",
+    color: "white",
   },
   priceContainer: {
-    display: 'flex',
-    justifyContent: 'space-evenly',
-    width: '100%',
-    background: '#dedede',
-    borderRadius: '24px',
-    padding: '24px'
+    display: "flex",
+    justifyContent: "space-evenly",
+    width: "100%",
+    background: "#dedede",
+    borderRadius: "24px",
+    padding: "24px",
   },
   priceHeading: {
-    paddingBottom: '12px'
+    paddingBottom: "12px",
   },
   priceConversion: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center'
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
   },
   conversionDirection: {
-    color: colors.darkGray
+    color: colors.darkGray,
   },
   toggleContainer: {
-    width: '100%',
-    display: 'flex',
+    width: "100%",
+    display: "flex",
   },
   toggleHeading: {
     flex: 1,
-    cursor: 'pointer',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingBottom: '24px',
-    color: colors.darkGray
+    cursor: "pointer",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    paddingBottom: "24px",
+    color: colors.darkGray,
   },
   toggleHeadingActive: {
     flex: 1,
-    cursor: 'pointer',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingBottom: '24px',
-    color: colors.text
+    cursor: "pointer",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    paddingBottom: "24px",
+    color: colors.text,
   },
   flexy: {
-    width: '100%',
-    display: 'flex'
+    width: "100%",
+    display: "flex",
   },
   label: {
     flex: 1,
-    paddingLeft: '2px',
-    paddingBottom: '8px'
+    paddingLeft: "2px",
+    paddingBottom: "8px",
   },
   between: {
-    width: '24px'
+    width: "24px",
   },
   portfolioContainer: {
-    width: '100%',
-    display: 'flex',
-    justifyContent: 'space-between',
-    marginTop: '40px'
+    width: "100%",
+    display: "flex",
+    justifyContent: "space-between",
+    marginTop: "40px",
   },
   titleBalance: {
-    padding: '20px 10px',
-    borderRadius: '5px',
-    border: '1px solid '+colors.borderBlue,
+    padding: "20px 10px",
+    borderRadius: "5px",
+    border: "1px solid " + colors.borderBlue,
     background: colors.white,
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
     flex: 1,
   },
   inline: {
-    display: 'flex',
-    alignItems: 'baseline'
+    display: "flex",
+    alignItems: "baseline",
   },
   symbol: {
-    paddingLeft: '6px'
+    paddingLeft: "6px",
   },
   gray: {
-    color: colors.darkGray
+    color: colors.darkGray,
   },
   assetInfoContainer: {
-    width: '100%',
+    width: "100%",
     background: colors.gray,
-    borderRadius: '5px',
-    padding: '24px'
+    borderRadius: "5px",
+    padding: "24px",
   },
   assetInfo: {
-    width: '100%',
-    height: '70px',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center'
+    width: "100%",
+    height: "70px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
   },
   assetInfoContainerBase: {
-    width: '100%',
-    height: '70px',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-evenly'
+    width: "100%",
+    height: "70px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-evenly",
   },
   assetLogo: {
-    marginRight: '10px'
+    marginRight: "10px",
   },
   assetField: {
-    display: 'flex',
-    flexDirection: 'column',
-    paddingBottom: '12px'
+    display: "flex",
+    flexDirection: "column",
+    paddingBottom: "12px",
   },
   assetFieldName: {
-    display: 'flex',
-    flexDirection: 'column',
+    display: "flex",
+    flexDirection: "column",
   },
   poolInfoHeader: {
-    width: '100%',
-    paddingBottom: '6px',
-    paddingTop: '6px'
+    width: "100%",
+    paddingBottom: "6px",
+    paddingTop: "6px",
   },
   cont: {
-    marginTop: '12px',
-    width: '100%'
+    marginTop: "12px",
+    width: "100%",
   },
   another: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexDirection: 'column'
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    flexDirection: "column",
   },
   sepperator: {
-    borderBottom: '1px solid #E1E1E1',
-    margin: '24px',
+    borderBottom: "1px solid #E1E1E1",
+    margin: "24px",
   },
   infoAlert: {
-    width: '100%',
-    marginBottom: '12px',
+    width: "100%",
+    marginBottom: "12px",
     backgroundColor: colors.gray,
-    '& a': {
-      color: 'inherit',
-    }
+    "& a": {
+      color: "inherit",
+    },
   },
 });
 
 class AddPool extends Component {
-
   constructor(props) {
-    super()
+    super();
 
-    const account = store.getStore('account')
-    const pools = store.getStore('pools')
-    const basePools = store.getStore('basePools')
+    const account = store.getStore("account");
+    const pools = store.getStore("pools");
+    const basePools = store.getStore("basePools");
 
     const selectedBasePool =
       basePools && basePools.length > 0 ? basePools[0] : null;
-    
+
     this.state = {
-      account: store.getStore('account'),
+      account: store.getStore("account"),
       assetInfo: null,
       basePools: basePools,
-      basePool: selectedBasePool ? selectedBasePool.name : '',
+      basePool: selectedBasePool ? selectedBasePool.name : "",
       selectedBasePool: selectedBasePool,
-      tokenAddress: '',
+      tokenAddress: "",
       tokenAddressError: false,
-      name: '',
+      name: "",
       nameError: false,
-      symbol: '',
+      symbol: "",
       symbolError: false,
-      a: '100',
+      a: "100",
       aError: false,
-      fee: '4000000',
+      fee: "4000000",
       feeError: false,
       loading: !(pools && pools.length > 0 && pools[0].assets.length > 0),
-    }
+    };
   }
   componentWillMount() {
     emitter.on(ERROR, this.errorReturned);
@@ -299,195 +294,219 @@ class AddPool extends Component {
     emitter.removeListener(CONFIGURE_RETURNED, this.configureReturned);
     emitter.removeListener(GET_ASSET_INFO_RETURNED, this.getAssetInfoReturned);
     emitter.removeListener(ADD_POOL_RETURNED, this.addPoolReturned);
-  };
+  }
 
   configureReturned = () => {
-    const pools = store.getStore('pools')
+    const pools = store.getStore("pools");
 
     this.setState({
-      account: store.getStore('account'),
+      account: store.getStore("account"),
       pools: pools,
-      loading: false
-    })
+      loading: false,
+    });
   };
 
   connectionDisconnected = () => {
-    this.setState({ account: store.getStore('account') })
-  }
+    this.setState({ account: store.getStore("account") });
+  };
 
   getAssetInfoReturned = (assetInfo) => {
     this.setState({
       assetInfo: assetInfo,
-      loading: false
-    })
-  }
+      loading: false,
+    });
+  };
 
   addPoolReturned = () => {
     this.setState({
       loading: false,
-    })
-  }
+    });
+  };
 
   errorReturned = (error) => {
-    this.setState({ loading: false })
+    this.setState({ loading: false });
   };
 
   render() {
     const { classes } = this.props;
-    const {
-      loading,
-      account,
-    } = this.state
+    const { loading, account } = this.state;
 
-    if(!account || !account.address) {
-      return (<div></div>)
+    if (!account || !account.address) {
+      return <div></div>;
     }
 
     return (
-      <div className={ classes.root }>
-        <div className={ classes.inputContainer }>
-          <Typography variant='h2' align='center' className={ classes.poolInfoHeader }>Create USD Metapool</Typography>
+      <div className={classes.root}>
+        <div className={classes.inputContainer}>
+          <Typography
+            variant="h2"
+            align="center"
+            className={classes.poolInfoHeader}
+          >
+            Create USD Metapool
+          </Typography>
           <Alert icon={false} className={classes.infoAlert}>
-            This page is mostly used for devs that wish to create a new variant of stablecoin against MM Finance's stablecoin liquidity. <br /><br />
-            Note: The factory does not support tokens with transfer fees.<br /><a href="https://curve.readthedocs.io/factory-deployer.html#limitations" target="_blank" rel="noopener noreferrer">Read all expected behaviors and limitations</a>
+            This page is mostly used for devs that wish to create a new variant
+            of stablecoin against MM Finance's stablecoin liquidity. <br />
+            <br />
+            Note: The factory does not support tokens with transfer fees.
+            <br />
+            {/* <a
+              href="https://curve.readthedocs.io/factory-deployer.html#limitations"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Read all expected behaviors and limitations
+            </a> */}
           </Alert>
-          { this.renderInput('name') }
-          { this.renderInput('symbol') }
-          { this.renderAddressInput() }
-          { this.renderBasePoolSelect() }
-          { this.renderAssetInfo() }
+          {this.renderInput("Name")}
+          {this.renderInput("Symbol")}
+          {this.renderAddressInput()}
+          {this.renderBasePoolSelect()}
+          {this.renderAssetInfo()}
           <Button
-            className={ classes.actionButton }
+            className={classes.actionButton}
             variant="outlined"
             color="primary"
-            disabled={ loading }
-            onClick={ this.onAddPool }
+            disabled={loading}
+            onClick={this.onAddPool}
             fullWidth
+          >
+            <Typography
+              className={classes.buttonText}
+              variant={"h4"}
+              color="secondary"
             >
-            <Typography className={ classes.buttonText } variant={ 'h4'} color='secondary'>Create Pool</Typography>
+              Create Pool
+            </Typography>
           </Button>
         </div>
-        { loading && <Loader /> }
+        {loading && <Loader />}
       </div>
-    )
-  };
+    );
+  }
 
   renderInput = (id) => {
-    const { loading } = this.state
-    const { classes } = this.props
+    const { loading } = this.state;
+    const { classes } = this.props;
 
     return (
-      <div className={ classes.valContainer }>
-        <div className={ classes.flexy }>
-          <div className={ classes.label }>
-            <Typography variant='h4'>{id}</Typography>
+      <div className={classes.valContainer}>
+        <div className={classes.flexy}>
+          <div className={classes.label}>
+            <Typography variant="h4">{id}</Typography>
           </div>
-          <div className={ classes.balances }>
-          </div>
+          <div className={classes.balances}></div>
         </div>
         <div>
           <TextField
-            id={ id }
-            name={ id }
-            value={ this.state[id] }
-            onChange={ this.onChange }
+            id={id}
+            name={id}
+            value={this.state[id]}
+            onChange={this.onChange}
             fullWidth
             variant="outlined"
-            disabled={ loading }
-            className={ classes.actionInput }
+            disabled={loading}
+            className={classes.actionInput}
           />
         </div>
       </div>
-    )
-  }
+    );
+  };
 
   renderAddressInput = () => {
-    const { loading, tokenAddress } = this.state
-    const { classes } = this.props
+    const { loading, tokenAddress } = this.state;
+    const { classes } = this.props;
 
     return (
-      <div className={ classes.valContainer }>
-        <div className={ classes.flexy }>
-          <div className={ classes.label }>
-            <Typography variant='h4'>token address</Typography>
+      <div className={classes.valContainer}>
+        <div className={classes.flexy}>
+          <div className={classes.label}>
+            <Typography variant="h4">Token Address</Typography>
           </div>
-          <div className={ classes.balances }>
-          </div>
+          <div className={classes.balances}></div>
         </div>
         <div>
           <TextField
-            id={ 'tokenAddress' }
-            name={ 'tokenAddress' }
-            value={ tokenAddress }
-            onChange={ this.onAddressChange }
+            id={"tokenAddress"}
+            name={"tokenAddress"}
+            value={tokenAddress}
+            onChange={this.onAddressChange}
             fullWidth
             variant="outlined"
-            disabled={ loading }
-            className={ classes.actionInput }
+            disabled={loading}
+            className={classes.actionInput}
           />
         </div>
       </div>
-    )
-  }
+    );
+  };
 
   renderBasePoolSelect = () => {
-    const { loading, basePools, basePool } = this.state
-    const { classes } = this.props
+    const { loading, basePools, basePool } = this.state;
+    const { classes } = this.props;
 
     return (
-      <div className={ classes.valContainer }>
-        <div className={ classes.flexy }>
-          <div className={ classes.label }>
-            <Typography variant='h4'>base pool</Typography>
+      <div className={classes.valContainer}>
+        <div className={classes.flexy}>
+          <div className={classes.label}>
+            <Typography variant="h4">Base Pool</Typography>
           </div>
-          <div className={ classes.balances }>
-          </div>
+          <div className={classes.balances}></div>
         </div>
         <div>
           <TextField
-            id={ 'basePool' }
-            name={ 'basePool' }
+            id={"basePool"}
+            name={"basePool"}
             select
-            value={ basePool }
-            onChange={ this.onPoolSelectChange }
+            value={basePool}
+            onChange={this.onPoolSelectChange}
             SelectProps={{
               native: false,
               renderValue: (option) => {
                 return (
-                  <div className={ classes.assetSelectIconName }>
-                    <Typography variant='h4'>{ option }</Typography>
+                  <div className={classes.assetSelectIconName}>
+                    <Typography variant="h4">{option}</Typography>
                   </div>
-                )
-              }
+                );
+              },
             }}
             fullWidth
             variant="outlined"
-            disabled={ loading }
-            className={ classes.actionInput }
-            placeholder={ 'Select' }
+            disabled={loading}
+            className={classes.actionInput}
+            placeholder={"Select"}
           >
-            { basePools ? basePools.map((basePool) => { return this.renderPoolOption(basePool) }) : null }
+            {basePools
+              ? basePools.map((basePool) => {
+                  return this.renderPoolOption(basePool);
+                })
+              : null}
           </TextField>
         </div>
       </div>
-    )
-  }
+    );
+  };
 
   renderPoolOption = (option) => {
-    const { classes } = this.props
+    const { classes } = this.props;
 
     return (
-      <MenuItem key={option.id} value={option.name} className={ classes.assetSelectMenu }>
-        <div className={ classes.assetSelectIconName }>
-          <Typography variant='h4'>{ option.name }</Typography>
+      <MenuItem
+        key={option.id}
+        value={option.name}
+        className={classes.assetSelectMenu}
+      >
+        <div className={classes.assetSelectIconName}>
+          <Typography variant="h4">{option.name}</Typography>
         </div>
       </MenuItem>
-    )
-  }
+    );
+  };
 
   renderAssetInfo = () => {
-    const { assetInfo, selectedBasePool, name, symbol, fee, a } = this.state
-    const { classes } = this.props
+    const { assetInfo, selectedBasePool, name, symbol, fee, a } = this.state;
+    const { classes } = this.props;
 
     /*
     <div className={ classes.assetField }>
@@ -501,136 +520,145 @@ class AddPool extends Component {
     */
 
     return (
-      <div className={ classes.cont }>
-        <Typography variant='h2' align='center' className={ classes.poolInfoHeader }>Your pool</Typography>
-        <div className={ classes.assetInfoContainer }>
-          <div className={ classes.assetField }>
-            <Typography variant='h3'>{ name }</Typography>
-            <Typography variant='h4' className={ classes.gray }>name</Typography>
+      <div className={classes.cont}>
+        <Typography
+          variant="h2"
+          align="center"
+          className={classes.poolInfoHeader}
+        >
+          Your Pool
+        </Typography>
+        <div className={classes.assetInfoContainer}>
+          <div className={classes.assetField}>
+            <Typography variant="h3">{name}</Typography>
+            <Typography variant="h4" className={classes.gray}>
+              Name
+            </Typography>
           </div>
-          <div className={ classes.assetField }>
-            <Typography variant='h3'>{ symbol }</Typography>
-            <Typography variant='h4' className={ classes.gray }>symbol</Typography>
+          <div className={classes.assetField}>
+            <Typography variant="h3">{symbol}</Typography>
+            <Typography variant="h4" className={classes.gray}>
+              Symbol
+            </Typography>
           </div>
 
-          <div className={ classes.sepperator }></div>
-          { assetInfo && this.renderAsset(assetInfo) }
-          <Typography variant='h2' align='center'  className={ classes.poolInfoHeader }>+</Typography>
-          <div className={ classes.assetInfoContainerBase }>
-            { selectedBasePool.assets.map((asset) => {
-              return this.renderAssetBase(asset)
+          <div className={classes.sepperator}></div>
+          {assetInfo && this.renderAsset(assetInfo)}
+          <Typography
+            variant="h2"
+            align="center"
+            className={classes.poolInfoHeader}
+          >
+            +
+          </Typography>
+          <div className={classes.assetInfoContainerBase}>
+            {selectedBasePool.assets.map((asset) => {
+              return this.renderAssetBase(asset);
             })}
           </div>
         </div>
       </div>
-    )
-  }
+    );
+  };
 
   renderAssetBase = (asset) => {
-    const { classes } = this.props
+    const { classes } = this.props;
 
     return (
-      <div className={ classes.another }>
-        <div className={ classes.assetLogo }>
-          <img
-            alt=""
-            src={ this.getLogoForAsset(asset) }
-            height="40px"
-          />
+      <div className={classes.another}>
+        <div className={classes.assetLogo}>
+          <img alt="" src={this.getLogoForAsset(asset)} height="40px" />
         </div>
-        <div  className={ classes.assetFieldName }>
-          <Typography variant='h3'>{ asset.symbol }</Typography>
+        <div className={classes.assetFieldName}>
+          <Typography variant="h3">{asset.symbol}</Typography>
         </div>
       </div>
-    )
-  }
+    );
+  };
 
   renderAsset = (asset) => {
-    const { classes } = this.props
+    const { classes } = this.props;
 
     return (
-      <div className={ classes.assetInfo }>
-        <div className={ classes.assetLogo }>
-          <img
-            alt=""
-            src={ this.getLogoForAsset(asset) }
-            height="40px"
-          />
+      <div className={classes.assetInfo}>
+        <div className={classes.assetLogo}>
+          <img alt="" src={this.getLogoForAsset(asset)} height="40px" />
         </div>
-        <div  className={ classes.assetFieldName }>
-          <Typography variant='h3'>{ asset.name }</Typography>
+        <div className={classes.assetFieldName}>
+          <Typography variant="h3">{asset.name}</Typography>
         </div>
       </div>
-    )
-  }
+    );
+  };
 
   getLogoForAsset = (asset) => {
     try {
-      return require('../../assets/tokens/'+asset.symbol+'-logo.png')
+      return require("../../assets/tokens/" + asset.symbol + "-logo.png");
     } catch {
-      return require('../../assets/tokens/unknown-logo.png')
+      return require("../../assets/tokens/unknown-logo.png");
     }
-  }
+  };
 
   startLoading = () => {
-    this.setState({ loading: true })
-  }
+    this.setState({ loading: true });
+  };
 
   onChange = (event) => {
-    let val = []
-    val[event.target.id] = event.target.value
-    this.setState(val)
-  }
+    let val = [];
+    val[event.target.id] = event.target.value;
+    this.setState(val);
+  };
 
   onAddressChange = (event) => {
-    let val = []
-    val[event.target.id] = event.target.value
-    this.setState(val)
+    let val = [];
+    val[event.target.id] = event.target.value;
+    this.setState(val);
 
-    this.setState({ assetInfo: null })
-    if(event.target.value.length === 42) {
-      this.setState({ loading: true })
-      dispatcher.dispatch({ type: GET_ASSET_INFO, content: { address: event.target.value }})
+    this.setState({ assetInfo: null });
+    if (event.target.value.length === 42) {
+      this.setState({ loading: true });
+      dispatcher.dispatch({
+        type: GET_ASSET_INFO,
+        content: { address: event.target.value },
+      });
     }
-  }
+  };
 
   onPoolSelectChange = (event) => {
-    let val = []
-    val[event.target.name] = event.target.value
-    this.setState(val)
+    let val = [];
+    val[event.target.name] = event.target.value;
+    this.setState(val);
 
     const thePool = this.state.basePools.filter((pool) => {
-      return pool.name === event.target.value
-    })
+      return pool.name === event.target.value;
+    });
 
     //on change pool change assets as well
     this.setState({
-      selectedBasePool: thePool[0]
-    })
-  }
+      selectedBasePool: thePool[0],
+    });
+  };
 
   onAddPool = () => {
-    this.setState({ nameError: false, symbolError: false, aError: false, feeError: false })
+    this.setState({
+      nameError: false,
+      symbolError: false,
+      aError: false,
+      feeError: false,
+    });
 
-    const {
-      tokenAddress,
-      selectedBasePool,
-      name,
-      symbol,
-      a,
-      fee
-    } = this.state
+    const { tokenAddress, selectedBasePool, name, symbol, a, fee } = this.state;
 
-    let error = false
+    let error = false;
 
-    if(!name || name === '') {
-      this.setState({ nameError: true })
-      error = true
+    if (!name || name === "") {
+      this.setState({ nameError: true });
+      error = true;
     }
 
-    if(!symbol || symbol === '') {
-      this.setState({ symbolError: true })
-      error = true
+    if (!symbol || symbol === "") {
+      this.setState({ symbolError: true });
+      error = true;
     }
 
     // if(!a || a === '') {
@@ -638,16 +666,26 @@ class AddPool extends Component {
     //   error = true
     // }
 
-    if(!fee || fee === '') {
-      this.setState({ feeError: true })
-      error = true
+    if (!fee || fee === "") {
+      this.setState({ feeError: true });
+      error = true;
     }
 
-    if(!error) {
-      this.setState({ loading: true })
-      dispatcher.dispatch({ type: ADD_POOL, content: { basePool: selectedBasePool, address: tokenAddress, name, symbol, a, fee } })
+    if (!error) {
+      this.setState({ loading: true });
+      dispatcher.dispatch({
+        type: ADD_POOL,
+        content: {
+          basePool: selectedBasePool,
+          address: tokenAddress,
+          name,
+          symbol,
+          a,
+          fee,
+        },
+      });
     }
-  }
+  };
 }
 
 export default withRouter(withStyles(styles)(AddPool));
