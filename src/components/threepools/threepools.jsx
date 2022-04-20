@@ -413,7 +413,7 @@ class ThreePools extends Component {
               Add DAI, USDC, and USDT to get 3MM LP. You can stake stablecoin
               3MM LPs for high APR at{" "}
               <a
-                href="https://mm.finance"
+                href="https://mm.finance/farms"
                 target="_blank"
                 rel="noopener noreferrer"
               >

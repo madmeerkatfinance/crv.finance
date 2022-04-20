@@ -222,7 +222,7 @@ class Header extends Component {
             <div
               className={classes.mmfLink}
               onClick={() => {
-                window.open("https://mm.finance", "_blank");
+                window.open("https://mm.finance/farms", "_blank");
               }}
             >
               <Typography variant={"h4"} className={`title`}>
