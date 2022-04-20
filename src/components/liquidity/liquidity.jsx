@@ -560,8 +560,6 @@ class Liquidity extends Component {
     const { loading, pools, pool } = this.state;
     const { classes } = this.props;
 
-    console.log(pools);
-
     return (
       <div className={classes.valContainer}>
         <div className={classes.flexy}>
@@ -686,7 +684,7 @@ class Liquidity extends Component {
   renderDepositAmount = () => {
     const { classes } = this.props;
 
-    const { depositAmount, slippagePcent, selectedPool } = this.state;
+    const { depositAmount = 0, slippagePcent, selectedPool } = this.state;
     let amount = depositAmount;
     if (!depositAmount) amount = 0.0;
     if (selectedPool && !selectedPool.isPoolSeeded) return null;
@@ -789,7 +787,7 @@ class Liquidity extends Component {
     const amountError = this.state[type + "AmountError"];
     // console.log(amount, amountError);
     return (
-      <div className={classes.valContainer}>
+      <div key={`${asset.symbol}-${asset.index}-${asset.erc20address}`} className={classes.valContainer}>
         <div className={classes.flexy}>
           <div className={classes.label}>
             <Typography variant="h4">{asset.name}</Typography>

@@ -530,7 +530,7 @@ class AddPool extends Component {
     const { classes } = this.props
 
     return (
-      <div className={ classes.another }>
+      <div key={`${asset.id}-${asset.index}`} className={ classes.another }>
         <div className={ classes.assetLogo }>
           <img
             alt=""

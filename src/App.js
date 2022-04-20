@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import { createMuiTheme, MuiThemeProvider } from "@material-ui/core/styles";
+import { createTheme, MuiThemeProvider } from "@material-ui/core/styles";
 import { Switch, Route } from "react-router-dom";
 import IpfsRouter from "ipfs-react-router";
 
@@ -93,7 +93,7 @@ class App extends Component {
     const { account } = this.state;
 
     return (
-      <MuiThemeProvider theme={createMuiTheme(interestTheme)}>
+      <MuiThemeProvider theme={createTheme(interestTheme)}>
         <CssBaseline />
         <IpfsRouter>
           {!account && (
