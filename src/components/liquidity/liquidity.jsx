@@ -54,7 +54,7 @@ const styles = (theme) => ({
       "0 10px 15px -3px rgba(56,189,248,0.1),0 4px 6px -2px rgba(56,189,248,0.05)",
     maxWidth: "500px",
     width: "80%",
-    background: colors.white,
+    background: colors.mmfGray,
   },
   inputCardHeading: {
     width: "100%",
@@ -105,11 +105,11 @@ const styles = (theme) => ({
   },
   actionButton: {
     "&:hover": {
-      backgroundColor: "#681DFF",
+      backgroundColor: "#c6a276",
     },
     marginTop: "24px",
     padding: "12px",
-    backgroundColor: "#681DFF",
+    backgroundColor: "#c6a276",
     borderRadius: "1rem",
     border: "1px solid #E1E1E1",
     fontWeight: 500,
@@ -446,7 +446,7 @@ class Liquidity extends Component {
       <div className={classes.valContainer}>
         <div className={classes.flexy}>
           <div className={classes.label}>
-            <Typography variant="h4">pool</Typography>
+            <Typography variant="h4">Pool</Typography>
           </div>
           <div className={classes.balances}>
             {selectedPool ? (
@@ -564,7 +564,7 @@ class Liquidity extends Component {
       <div className={classes.valContainer}>
         <div className={classes.flexy}>
           <div className={classes.label}>
-            <Typography variant="h4">pool</Typography>
+            <Typography variant="h4">Pool</Typography>
           </div>
           <div className={classes.balances}></div>
         </div>
@@ -696,11 +696,7 @@ class Liquidity extends Component {
             <Typography variant="h4">Receive</Typography>
           </div>
           <div className={classes.balances}>
-            <Typography
-              variant="h4"
-              className={classes.value}
-              noWrap
-            >
+            <Typography variant="h4" className={classes.value} noWrap>
               {"" +
                 (selectedPool && selectedPool.balance
                   ? floatToFixed(selectedPool.balance, 4)
@@ -787,7 +783,10 @@ class Liquidity extends Component {
     const amountError = this.state[type + "AmountError"];
     // console.log(amount, amountError);
     return (
-      <div key={`${asset.symbol}-${asset.index}-${asset.erc20address}`} className={classes.valContainer}>
+      <div
+        key={`${asset.symbol}-${asset.index}-${asset.erc20address}`}
+        className={classes.valContainer}
+      >
         <div className={classes.flexy}>
           <div className={classes.label}>
             <Typography variant="h4">{asset.name}</Typography>

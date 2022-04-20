@@ -51,7 +51,7 @@ const styles = (theme) => ({
       "0 10px 15px -3px rgba(56,189,248,0.1),0 4px 6px -2px rgba(56,189,248,0.05)",
     maxWidth: "500px",
     width: "80%",
-    background: colors.white,
+    background: colors.mmfGray,
   },
   inputCardHeading: {
     width: "100%",
@@ -101,11 +101,11 @@ const styles = (theme) => ({
   },
   actionButton: {
     "&:hover": {
-      backgroundColor: "#681DFF",
+      backgroundColor: "#c6a276",
     },
     marginTop: "24px",
     padding: "12px",
-    backgroundColor: "#681DFF",
+    backgroundColor: "#c6a276",
     borderRadius: "1rem",
     border: "1px solid #E1E1E1",
     fontWeight: 500,

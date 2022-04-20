@@ -119,7 +119,7 @@ const styles = (theme) => ({
     padding: "12px",
     // border: '2px solid rgb(174, 174, 174)',
     borderRadius: "5px",
-    background: "linear-gradient(90deg, #681dff 0%, #a455ff 100%)",
+    background: "linear-gradient(90deg, #b08653 0%, #c6a276 100%)",
     color: "white",
     display: "flex",
     alignItems: "center",
@@ -134,7 +134,7 @@ const styles = (theme) => ({
       top: "90px",
       border: "1px solid " + colors.borderBlue,
       // background: colors.white
-      background: "linear-gradient(90deg, #681dff 0%, #a455ff 100%)",
+      background: "linear-gradient(90deg, #b08653 0%, #c6a276 100%)",
     },
   },
   walletTitle: {

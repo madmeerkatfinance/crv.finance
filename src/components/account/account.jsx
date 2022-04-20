@@ -11,7 +11,7 @@ const styles = (theme) => ({
     flex: 1,
     display: "flex",
     flexDirection: "column",
-    backgroundImage: "linear-gradient(to bottom right, #460096, #a455ff)",
+    backgroundImage: "linear-gradient(to bottom right, #b08653, #c6a276)",
 
     // background: colors.purple,
     minWidth: "100vw",

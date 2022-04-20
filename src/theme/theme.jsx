@@ -27,13 +27,13 @@ export const colors = {
   pink: "#DC6BE5",
   compoundGreen: "#39da5e",
   tomato: "#e56b73",
-
-  text: "#212529",
-  lightBlue: "#681DFF",
-  topaz: "#681dff",
+  gold: "#c6a276",
+  text: "#fff",
+  lightBlue: "#c6a276",
+  topaz: "#c6a276",
   mmfGray: "#27262C",
-  darkGray: "rgba(43,57,84,.5)",
-  borderBlue: "#a455ff",
+  darkGray: "#848484",
+  borderBlue: "#c6a276",
 };
 
 const breakpoints = createBreakpoints({
@@ -119,7 +119,12 @@ const iswapTheme = {
       },
     },
     MuiSelect: {
+      icon: {
+        color: colors.white,
+      },
       select: {
+        background: colors.darkBlue,
+
         "&:focus": {
           borderRadius: "5px",
         },
@@ -149,12 +154,26 @@ const iswapTheme = {
       },
     },
     MuiInputBase: {
+      root: {
+        "&$disabled": {
+          color: colors.white,
+        },
+      },
+
+      fullWidth: {
+        background: colors.darkBlue,
+      },
       input: {
         fontSize: "16px",
         fontWeight: "600",
         WebkitFontSmoothing: "antialiased",
         MozOsxFontSmoothing: "grayscale",
         lineHeight: 1.2,
+      },
+    },
+    MuiMenu: {
+      list: {
+        background: colors.darkBlue,
       },
     },
     MuiInput: {
@@ -260,7 +279,7 @@ const iswapTheme = {
           backgroundColor: "rgba(47,128,237, 0.2)",
         },
         "&$selected": {
-          backgroundColor: "#681DFF",
+          backgroundColor: "#c6a276",
           "& > span > h4": {
             color: "#fff",
           },
@@ -300,7 +319,7 @@ const iswapTheme = {
   },
   palette: {
     primary: {
-      main: colors.purple,
+      main: colors.gold,
     },
     secondary: {
       main: colors.topaz,
