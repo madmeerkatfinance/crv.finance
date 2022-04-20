@@ -221,7 +221,7 @@ class ThreePool extends Component {
     // const preSelectedPoolMatches = window.location.hash.match(/pool=([a-z0-9/-]+)/i);
     // const preSelectedPool = preSelectedPoolMatches === null ? null : preSelectedPoolMatches[1];
 
-    let selectedPool = null;
+    let selectedPool = selectedBasePool;
     // if(pools && pools.length > 0) {
     //   const v2PoolsArr = pools.filter((pool) => {
     //     return pool.version === 2
@@ -691,7 +691,7 @@ class ThreePool extends Component {
   renderDepositAmount = () => {
     const { classes } = this.props;
 
-    const { depositAmount, slippagePcent, selectedPool } = this.state;
+    const { depositAmount = 0, slippagePcent, selectedPool } = this.state;
     // console.log(depositAmount)
     let amount = depositAmount;
     if (!depositAmount) amount = 0.0;
@@ -791,12 +791,12 @@ class ThreePool extends Component {
 
     let type = asset.symbol;
 
-    const amount = this.state[type + "Amount"];
+    const amount = this.state?.[type + "Amount"] ?? 0;
     const amountError = this.state[type + "AmountError"];
     // console.log(amount);
 
     return (
-      <div className={classes.valContainer}>
+      <div key={`${asset.symbol}-${asset.index}-${asset.erc20address}`} className={classes.valContainer}>
         <div className={classes.flexy}>
           <div className={classes.label}>
             <Typography variant="h4">{asset.name}</Typography>

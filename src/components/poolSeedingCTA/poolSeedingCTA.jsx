@@ -16,8 +16,8 @@ const styles = () => ({
   },
 });
 
-const AssetLink = ({ erc20address, symbol, classes }) => (
-  <a href={`https://cronoscan.com/token/${erc20address}`} target="_blank" rel="noopener noreferrer" className={classes.link}>{symbol}</a>
+const AssetLink = ({ id, erc20address, symbol, classes }) => (
+  <a key={`link-${erc20address}-${symbol}-${id}`} href={`https://cronoscan.com/token/${erc20address}`} target="_blank" rel="noopener noreferrer" className={classes.link}>{symbol}</a>
 );
 
 const DepositPageLink = ({ pool, classes }) => {
