@@ -12,7 +12,7 @@ import Disclaimer from "./components/disclaimer";
 import SnackbarController from "./components/snackbar";
 import Account from "./components/account";
 import Swap from "./components/swap";
-import ThreePool from "./components/ThreePool/ThreePool";
+import ThreePools from "./components/threepools/threepools";
 import Liquidity from "./components/liquidity";
 import AddPool from "./components/addPool";
 import bg from "./assets/meerkat_light.png";
@@ -139,7 +139,7 @@ class App extends Component {
                   <Swap />
                 </Route>
                 <Route path="/3mm">
-                  <ThreePool />
+                  <ThreePools />
                 </Route>
                 <Route path="/create">
                   <AddPool />

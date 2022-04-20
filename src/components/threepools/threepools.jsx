@@ -207,7 +207,7 @@ const styles = (theme) => ({
   },
 });
 
-class ThreePool extends Component {
+class ThreePools extends Component {
   constructor(props) {
     super();
 
@@ -1017,4 +1017,4 @@ class ThreePool extends Component {
   };
 }
 
-export default withRouter(withStyles(styles)(ThreePool));
+export default withRouter(withStyles(styles)(ThreePools));
