@@ -74,11 +74,19 @@ const styles = (theme) => ({
     minWidth: "300px",
     display: "flex",
   },
+  multiAssetSelectIcon: {
+    display: "inline-block",
+    verticalAlign: "middle",
+    height: "30px",
+    width: "30px",
+    textAlign: "center",
+    cursor: "pointer",
+  },
   assetSelectIcon: {
     display: "inline-block",
     verticalAlign: "middle",
     borderRadius: "25px",
-    background: "#dedede",
+    // background: "#dedede",
     height: "30px",
     width: "30px",
     textAlign: "center",
@@ -468,8 +476,15 @@ class Swap extends Component {
               native: false,
               renderValue: (option) => {
                 return (
-                  <div className={classes.assetSelectIconName}>
-                    <Typography variant="h4">{option}</Typography>
+                  <div>
+                    {/* <img
+                      alt=""
+                      src={require(`../../assets/tokens/${option}-logo.png`)}
+                      className={classes.multiAssetSelectIcon}
+                    /> */}
+                    <div className={classes.assetSelectIconName}>
+                      <Typography variant="h4">{option}</Typography>
+                    </div>
                   </div>
                 );
               },

@@ -71,7 +71,7 @@ const styles = (theme) => ({
     display: "inline-block",
     verticalAlign: "middle",
     borderRadius: "25px",
-    background: "#dedede",
+    // background: "#dedede",
     height: "30px",
     width: "30px",
     textAlign: "center",
@@ -193,7 +193,7 @@ const styles = (theme) => ({
   },
   assetInfoContainer: {
     width: "100%",
-    background: colors.gray,
+    background: colors.darkBlue,
     borderRadius: "5px",
     padding: "24px",
   },

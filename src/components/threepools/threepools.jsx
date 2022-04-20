@@ -74,6 +74,16 @@ const styles = (theme) => ({
     paddingRight: "2px",
     cursor: "pointer",
   },
+  multiAssetSelectIcon: {
+    display: "inline-block",
+    verticalAlign: "middle",
+    height: "30px",
+    width: "30px",
+    textAlign: "center",
+    cursor: "pointer",
+    marginRight: "8px",
+    marginLeft: "4px",
+  },
   assetSelectMenu: {
     padding: "15px 15px 15px 20px",
     minWidth: "300px",
@@ -84,7 +94,7 @@ const styles = (theme) => ({
     display: "inline-block",
     verticalAlign: "middle",
     borderRadius: "25px",
-    background: "#dedede",
+    // background: "#dedede",
     height: "30px",
     width: "30px",
     textAlign: "center",
@@ -580,7 +590,6 @@ class ThreePools extends Component {
   renderPoolSelect = (id) => {
     const { loading, basePools, basePool } = this.state;
     const { classes } = this.props;
-
     return (
       <div className={classes.valContainer}>
         <div className={classes.flexy}>
@@ -600,8 +609,18 @@ class ThreePools extends Component {
               native: false,
               renderValue: (option) => {
                 return (
-                  <div className={classes.assetSelectIconName}>
-                    <Typography variant="h4">{option}</Typography>
+                  <div>
+                    {/* <img
+                      alt=""
+                      src={require(`../../assets/tokens/${option?.replaceAll(
+                        "/",
+                        "-"
+                      )}-logo.png`)}
+                      className={classes.multiAssetSelectIcon}
+                    /> */}
+                    <div className={classes.assetSelectIconName}>
+                      <Typography variant="h4">{option}</Typography>
+                    </div>
                   </div>
                 );
               },

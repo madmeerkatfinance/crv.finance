@@ -78,11 +78,21 @@ const styles = (theme) => ({
     display: "flex",
     width: "100%",
   },
+  multiAssetSelectIcon: {
+    display: "inline-block",
+    verticalAlign: "middle",
+    height: "30px",
+    width: "30px",
+    textAlign: "center",
+    cursor: "pointer",
+    marginRight: "8px",
+    marginLeft: "4px",
+  },
   assetSelectIcon: {
     display: "inline-block",
     verticalAlign: "middle",
     borderRadius: "25px",
-    background: "#dedede",
+    // background: "#dedede",
     height: "30px",
     width: "30px",
     textAlign: "center",
@@ -93,6 +103,7 @@ const styles = (theme) => ({
     display: "inline-block",
     verticalAlign: "middle",
     flex: 1,
+    paddingLeft: "2px",
   },
   assetSelectBalance: {
     paddingLeft: "24px",
@@ -579,8 +590,15 @@ class Liquidity extends Component {
               native: false,
               renderValue: (option) => {
                 return (
-                  <div className={classes.assetSelectIconName}>
-                    <Typography variant="h4">{option}</Typography>
+                  <div>
+                    {/* <img
+                      alt=""
+                      src={require(`../../assets/tokens/${option}-logo.png`)}
+                      className={classes.multiAssetSelectIcon}
+                    /> */}
+                    <div className={classes.assetSelectIconName}>
+                      <Typography variant="h4">{option}</Typography>
+                    </div>
                   </div>
                 );
               },
