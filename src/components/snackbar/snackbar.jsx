@@ -126,14 +126,15 @@ class MySnackbar extends Component {
         messageType = "Info";
         break;
       case "Hash":
-        icon = <SuccessIcon color={colors.purple} />;
-        color = colors.purple;
+        icon = <SuccessIcon color={colors.blue} />;
+        color = colors.blue;
         messageType = "Hash";
 
         let snackbarMessage = "https://cronoscan.com/tx/" + message;
         actions = [
           <Button
             variant="text"
+            color='secondary'
             size="small"
             onClick={() => window.open(snackbarMessage, "_blank")}
           >
@@ -158,7 +159,7 @@ class MySnackbar extends Component {
           horizontal: "left",
         }}
         open={this.state.open}
-        autoHideDuration={6000}
+        autoHideDuration={60000}
         onClose={this.handleClose}
         message={
           <div

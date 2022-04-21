@@ -328,6 +328,7 @@ const iswapTheme = {
     text: {
       primary: colors.text,
       secondary: colors.text,
+      tertiary: colors.purple
     },
   },
   breakpoints: breakpoints,
