@@ -9,6 +9,7 @@ import { Alert } from "@material-ui/lab";
 import Loader from "../loader";
 import SlippageInfo from "../slippageInfo";
 import { floatToFixed } from "../../utils/numbers";
+import TransactionInfo from "../transactionInfo/transactionInfo";
 
 import {
   ERROR,
@@ -441,6 +442,7 @@ class Liquidity extends Component {
           </div>
           {activeTab === "deposit" && this.renderDeposit()}
           {activeTab === "withdraw" && this.renderWithdraw()}
+          <TransactionInfo />
         </div>
         {loading && <Loader />}
       </div>

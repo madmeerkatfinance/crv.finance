@@ -5,6 +5,7 @@ import { Typography, TextField, MenuItem, Button } from "@material-ui/core";
 import SwapVertIcon from "@material-ui/icons/SwapVert";
 import { colors } from "../../theme";
 import { Alert } from "@material-ui/lab";
+import TransactionInfo from "../transactionInfo/transactionInfo";
 
 import Loader from "../loader";
 import RateInfo from "../rateInfo";
@@ -404,7 +405,8 @@ class Swap extends Component {
             <div style={{ marginBottom: 10 }}></div>
             <Alert icon={false} className={classes.infoAlert}>
               Perform a token swap between different tokens. First, select the
-              stablecoin pool that you wish to perform a trade against.
+              stablecoin pool that you wish to perform a trade against. Trading
+              fees is at 0.04%
             </Alert>
             <div style={{ marginBottom: 20 }}></div>
           </div>
@@ -412,6 +414,7 @@ class Swap extends Component {
           {selectedPool && !selectedPool.isPoolSeeded && (
             <PoolSeedingCTA pool={selectedPool} />
           )}
+
           {(!selectedPool || selectedPool.isPoolSeeded) && (
             <Fragment>
               {this.renderAssetInput("from")}
@@ -445,6 +448,7 @@ class Swap extends Component {
                   {fromAmount !== "" && "Swap"}
                 </Typography>
               </Button>
+              {fromAmount !== "" && <TransactionInfo />}
             </Fragment>
           )}
         </div>

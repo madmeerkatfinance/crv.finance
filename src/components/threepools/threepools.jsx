@@ -5,6 +5,7 @@ import PoolSeedingCTA from "../poolSeedingCTA/poolSeedingCTA";
 import { Typography, TextField, MenuItem, Button } from "@material-ui/core";
 import { colors } from "../../theme/theme";
 import { Alert } from "@material-ui/lab";
+import TransactionInfo from "../transactionInfo/transactionInfo";
 
 import Loader from "../loader/loader";
 import SlippageInfo from "../slippageInfo/slippageInfo";
@@ -452,6 +453,7 @@ class ThreePools extends Component {
           </div>
           {activeTab === "deposit" && this.renderDeposit()}
           {activeTab === "withdraw" && this.renderWithdraw()}
+          <TransactionInfo />
         </div>
         {loading && <Loader />}
       </div>
@@ -476,7 +478,7 @@ class ThreePools extends Component {
                 variant="h4"
                 onClick={() => {
                   this.setAmount(
-                    "Pool",
+                    "pool",
                     selectedPool
                       ? floatToFixed(
                           selectedPool.balance,
