@@ -78,16 +78,6 @@ const styles = (theme) => ({
       display: "none",
     },
   },
-  docLink: {
-    color: "gray",
-    padding: "12px 0px",
-    margin: "0px 12px",
-    cursor: "not-allowed",
-    "&:hover": {
-      paddingBottom: "9px",
-      borderBottom: "3px solid " + colors.borderBlue,
-    },
-  },
   title: {
     textTransform: "capitalize",
   },
@@ -233,7 +223,15 @@ class Header extends Component {
             {this.renderLink("3MM")}
             {this.renderLink("Liquidity")}
             {this.renderLink("Create")}
-            <div className={classes.docLink}>
+            <div
+              className={classes.link}
+              onClick={() => {
+                window.open(
+                  "https://mmfinance.gitbook.io/mmf-money/pages/stable-swap",
+                  "_blank"
+                );
+              }}
+            >
               <Typography variant={"h4"} className={`title`}>
                 Doc
               </Typography>
