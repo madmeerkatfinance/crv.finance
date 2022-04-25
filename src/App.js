@@ -26,7 +26,6 @@ import {
 } from "./constants";
 
 import Store from "./stores";
-import Wrongchain from "./components/wrongchain/wrongchain";
 const emitter = Store.emitter;
 const store = Store.store;
 const dispatcher = Store.dispatcher;
@@ -34,7 +33,6 @@ const dispatcher = Store.dispatcher;
 class App extends Component {
   state = {
     account: null,
-    chainId: null,
   };
 
   componentWillMount() {
@@ -51,16 +49,6 @@ class App extends Component {
             });
             emitter.emit(CONNECTION_CONNECTED);
             // console.log(a)
-          })
-          .catch((e) => {
-            console.log(e);
-          });
-        injected
-          .getChainId()
-          .then((a) => {
-            this.setState({
-              chainId: a,
-            });
           })
           .catch((e) => {
             console.log(e);
@@ -94,7 +82,6 @@ class App extends Component {
 
   connectionConnected = () => {
     this.setState({ account: store.getStore("account") });
-
     dispatcher.dispatch({ type: CONFIGURE, content: {} });
   };
 
@@ -103,7 +90,8 @@ class App extends Component {
   };
 
   render() {
-    const { account, chainId } = this.state;
+    const { account } = this.state;
+
     return (
       <MuiThemeProvider theme={createTheme(interestTheme)}>
         <CssBaseline />
@@ -127,27 +115,7 @@ class App extends Component {
               <Account />
             </div>
           )}
-          {account && chainId !== "0x19" && (
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                minHeight: "100vh",
-                minWidth: "100vw",
-                justifyContent: "center",
-                alignItems: "center",
-                backgroundPosition: "0 20vh",
-                backgroundImage: `url(${bg})`,
-                backgroundRepeat: "no-repeat",
-                backgroundSize: "cover",
-                backgroundColor: "black",
-              }}
-            >
-              <Wrongchain />
-            </div>
-          )}
-
-          {account && chainId === "0x19" && (
+          {account && (
             <div
               style={{
                 display: "flex",
