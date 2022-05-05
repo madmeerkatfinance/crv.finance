@@ -671,8 +671,10 @@ class Swap extends Component {
   };
 
   onChange = (event) => {
-    let val = [];
+    let val = {};
     val[event.target.id] = event.target.value;
+
+    console.log(val)
     this.setState(val);
 
     const that = this;
@@ -683,7 +685,7 @@ class Swap extends Component {
   };
 
   onPoolSelectChange = (event) => {
-    let val = [];
+    let val = {};
     val[event.target.name] = event.target.value;
     this.setState(val);
 
@@ -709,7 +711,7 @@ class Swap extends Component {
   };
 
   onAssetSelectChange = (event) => {
-    let val = [];
+    let val = {};
     val[event.target.name] = event.target.value;
     this.setState(val);
 
@@ -728,7 +730,7 @@ class Swap extends Component {
     if (type === "to") {
       return false;
     }
-    let val = [];
+    let val = {};
     val[type + "Amount"] = balance;
     this.setState(val);
     const that = this;
