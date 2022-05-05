@@ -250,7 +250,7 @@ class Liquidity extends Component {
       pool: selectedPool ? selectedPool.id : "",
       selectedPool: selectedPool,
       poolAmount: "",
-      poolAmountError: "",
+      poolAmountError: false,
       loading: !(pools && pools.length > 0 && pools[0].assets.length > 0),
       activeTab: "deposit",
     };

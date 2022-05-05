@@ -253,7 +253,7 @@ class ThreePools extends Component {
       pool: selectedPool ? selectedPool.id : "",
       selectedPool: selectedPool,
       poolAmount: "",
-      poolAmountError: "",
+      poolAmountError: false,
       loading: !(
         basePools &&
         basePools.length > 0 &&
