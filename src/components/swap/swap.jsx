@@ -786,12 +786,18 @@ class Swap extends Component {
     const to = selectedPool.assets.filter((asset) => {
       return asset.symbol === toAsset;
     })[0];
-
+    console.log(
+      "fromAmount=",
+      fromAmount,
+      "fromBalance=",
+      from.balance,
+      isNaN(fromAmount)
+    );
     if (
       !fromAmount ||
       isNaN(fromAmount) ||
-      fromAmount <= 0 ||
-      fromAmount > from.balance
+      parseFloat(fromAmount) <= 0 ||
+      parseFloat(fromAmount) > parseFloat(from.balance)
     ) {
       this.setState({ fromAmountError: true });
       return false;
