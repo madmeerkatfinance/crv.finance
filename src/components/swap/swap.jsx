@@ -674,7 +674,7 @@ class Swap extends Component {
     let val = {};
     val[event.target.id] = event.target.value;
 
-    console.log(val)
+    console.log(val);
     this.setState(val);
 
     const that = this;
@@ -795,15 +795,15 @@ class Swap extends Component {
       from.balance,
       isNaN(fromAmount)
     );
-    if (
-      !fromAmount ||
-      isNaN(fromAmount) ||
-      parseFloat(fromAmount) <= 0 ||
-      parseFloat(fromAmount) > parseFloat(from.balance)
-    ) {
-      this.setState({ fromAmountError: true });
-      return false;
-    }
+    // if (
+    //   !fromAmount ||
+    //   isNaN(fromAmount) ||
+    //   parseFloat(fromAmount) <= 0 ||
+    //   parseFloat(fromAmount) > parseFloat(from.balance)
+    // ) {
+    //   this.setState({ fromAmountError: true });
+    //   return false;
+    // }
 
     this.setState({ loading: true });
     dispatcher.dispatch({
