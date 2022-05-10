@@ -795,15 +795,15 @@ class Swap extends Component {
       from.balance,
       isNaN(fromAmount)
     );
-    // if (
-    //   !fromAmount ||
-    //   isNaN(fromAmount) ||
-    //   parseFloat(fromAmount) <= 0 ||
-    //   parseFloat(fromAmount) > parseFloat(from.balance)
-    // ) {
-    //   this.setState({ fromAmountError: true });
-    //   return false;
-    // }
+    if (
+      !fromAmount ||
+      isNaN(fromAmount) ||
+      parseFloat(fromAmount) <= 0 ||
+      parseFloat(fromAmount) > parseFloat(from.balance)
+    ) {
+      this.setState({ fromAmountError: true });
+      return false;
+    }
 
     this.setState({ loading: true });
     dispatcher.dispatch({
