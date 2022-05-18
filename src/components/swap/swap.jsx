@@ -301,11 +301,11 @@ class Swap extends Component {
       selectedPool: selectedPool,
       fromAsset:
         selectedPool && selectedPool.assets.length > 0
-          ? selectedPool.assets[0].symbol
+          ? selectedPool.assets[2].symbol
           : "",
       toAsset:
         selectedPool && selectedPool.assets.length > 0
-          ? selectedPool.assets[1].symbol
+          ? selectedPool.assets[0].symbol
           : "",
       loading: false,
     });
