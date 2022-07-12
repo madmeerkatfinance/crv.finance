@@ -531,7 +531,7 @@ class Swap extends Component {
   renderAssetInput = (type) => {
     const { classes } = this.props;
 
-    const { loading, pools, selectedPool } = this.state;
+    const { loading, selectedPool } = this.state;
 
     const that = this;
 
@@ -715,10 +715,6 @@ class Swap extends Component {
     val[event.target.name] = event.target.value;
     this.setState(val);
 
-    const { pools, pool, selectedPool } = this.state;
-
-    const value = event.target.value;
-
     const that = this;
 
     window.setTimeout(() => {
@@ -741,7 +737,7 @@ class Swap extends Component {
   };
 
   _getSwapAmount = () => {
-    const { fromAsset, toAsset, pool, pools, selectedPool, fromAmount } =
+    const { fromAsset, toAsset, selectedPool, fromAmount } =
       this.state;
 
     if (!selectedPool.isPoolSeeded) return;
@@ -778,7 +774,7 @@ class Swap extends Component {
   onSwap = () => {
     this.setState({ fromAmountError: false });
 
-    const { fromAsset, toAsset, pool, pools, selectedPool, fromAmount } =
+    const { fromAsset, toAsset, selectedPool, fromAmount } =
       this.state;
 
     const from = selectedPool.assets.filter((asset) => {

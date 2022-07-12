@@ -26,7 +26,6 @@ import {
   WITHDRAW_RETURNED,
   WITHDRAW_BASE,
   GET_WITHDRAW_AMOUNT,
-  GET_WITHDRAW_AMOUNT_RETURNED,
   SWAP,
   SWAP_RETURNED,
   GET_SWAP_AMOUNT,
@@ -43,16 +42,6 @@ import Web3 from "web3";
 import {
   injected,
   deficonnect,
-  walletconnect,
-  walletlink,
-  ledger,
-  trezor,
-  frame,
-  fortmatic,
-  portis,
-  squarelink,
-  torus,
-  authereum,
 } from "./connectors";
 
 const rp = require("request-promise");
@@ -441,7 +430,7 @@ class Store {
       return false;
     }
 
-    const web3 = await this._getWeb3Provider();
+    await this._getWeb3Provider();
 
     return emitter.emit(BALANCES_RETURNED);
   };
@@ -722,17 +711,6 @@ class Store {
       const account = store.getStore("account");
       const web3 = await this._getWeb3Provider();
 
-      const approvals = await Promise.all(
-        pool.assets.map((asset, index) => {
-          return this._checkApproval2(
-            asset,
-            account,
-            amounts[index],
-            pool.liquidityAddress
-          );
-        })
-      );
-
       const amountsBN = amounts.map((amount, index) => {
         let amountToSend = web3.utils.toWei(amount.toString(), "ether");
         if (pool.assets[index].decimals !== 18) {
@@ -926,7 +904,7 @@ class Store {
       );
       const totalSupply = await tokenContract.methods.totalSupply().call();
       console.log(totalSupply);
-      if (totalSupply == 0) {
+      if (totalSupply === 0) {
         receive = "0";
       } else {
         return callback(ex);

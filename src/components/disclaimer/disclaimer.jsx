@@ -1,8 +1,5 @@
 import React, { Component } from 'react'
 import { withStyles } from '@material-ui/core/styles';
-import {
-  Typography
-} from '@material-ui/core';
 import { withRouter } from "react-router-dom";
 import { colors } from '../../theme'
 

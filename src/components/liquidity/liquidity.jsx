@@ -14,7 +14,6 @@ import TransactionInfo from "../transactionInfo/transactionInfo";
 import {
   ERROR,
   CONFIGURE_RETURNED,
-  GET_BALANCES,
   BALANCES_RETURNED,
   DEPOSIT,
   DEPOSIT_RETURNED,
@@ -22,7 +21,6 @@ import {
   WITHDRAW_RETURNED,
   GET_DEPOSIT_AMOUNT,
   GET_DEPOSIT_AMOUNT_RETURNED,
-  GET_WITHDRAW_AMOUNT,
   GET_WITHDRAW_AMOUNT_RETURNED,
   SLIPPAGE_INFO_RETURNED,
 } from "../../constants";
@@ -452,7 +450,7 @@ class Liquidity extends Component {
   renderPoolSelectInput = () => {
     const { classes } = this.props;
 
-    const { loading, pools, pool, poolAmount, poolAmountError, selectedPool } =
+    const { loading, poolAmount, poolAmountError, selectedPool } =
       this.state;
 
     return (
@@ -662,7 +660,7 @@ class Liquidity extends Component {
 
   renderDeposit = () => {
     const { classes } = this.props;
-    const { loading, pools, pool, selectedPool } = this.state;
+    const { loading, selectedPool } = this.state;
 
     return (
       <React.Fragment>
@@ -705,8 +703,6 @@ class Liquidity extends Component {
     const { classes } = this.props;
 
     const { depositAmount = 0, slippagePcent, selectedPool } = this.state;
-    let amount = depositAmount;
-    if (!depositAmount) amount = 0.0;
     if (selectedPool && !selectedPool.isPoolSeeded) return null;
 
     return (
@@ -763,7 +759,7 @@ class Liquidity extends Component {
 
   renderWithdraw = () => {
     const { classes } = this.props;
-    const { loading, pools, pool } = this.state;
+    const { loading } = this.state;
 
     return (
       <React.Fragment>
@@ -919,7 +915,7 @@ class Liquidity extends Component {
 
     this.setState({ activeTab: "deposit", poolAmount: "" });
 
-    let { pools, pool, selectedPool } = this.state;
+    let { pools, selectedPool } = this.state;
 
     if (!selectedPool) {
       return false;
@@ -988,7 +984,7 @@ class Liquidity extends Component {
   };
 
   onDeposit = () => {
-    const { pool, pools, selectedPool } = this.state;
+    const { selectedPool } = this.state;
 
     let error = false;
 
@@ -1015,7 +1011,7 @@ class Liquidity extends Component {
   onWithdraw = () => {
     this.setState({ poolAmountError: false });
 
-    const { poolAmount, pool, pools, selectedPool } = this.state;
+    const { poolAmount, selectedPool } = this.state;
 
     if (
       !poolAmount ||

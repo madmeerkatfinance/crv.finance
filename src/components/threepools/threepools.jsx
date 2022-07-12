@@ -3,7 +3,7 @@ import { withRouter } from "react-router-dom";
 import { withStyles } from "@material-ui/core/styles";
 import PoolSeedingCTA from "../poolSeedingCTA/poolSeedingCTA";
 import { Typography, TextField, MenuItem, Button } from "@material-ui/core";
-import { colors } from "../../theme/theme";
+import { colors } from '../../theme';
 import { Alert } from "@material-ui/lab";
 import TransactionInfo from "../transactionInfo/transactionInfo";
 
@@ -14,20 +14,16 @@ import { floatToFixed } from "../../utils/numbers";
 import {
   ERROR,
   BASE_POOL_CONFIGURE_RETURNED,
-  GET_BALANCES,
   BALANCES_RETURNED,
-  DEPOSIT,
   DEPOSIT_RETURNED,
-  WITHDRAW,
   WITHDRAW_BASE,
   WITHDRAW_RETURNED,
   GET_BASE_DEPOSIT_AMOUNT,
   GET_BASE_DEPOSIT_AMOUNT_RETURNED,
-  GET_WITHDRAW_AMOUNT,
   GET_WITHDRAW_AMOUNT_RETURNED,
   SLIPPAGE_INFO_RETURNED,
   DEPOSIT_BASE_POOL,
-} from "../../constants/constants";
+} from '../../constants';
 
 import Store from "../../stores/store";
 const emitter = Store.emitter;
@@ -462,7 +458,7 @@ console.log(basePools)
   renderPoolSelectInput = () => {
     const { classes } = this.props;
 
-    const { loading, pools, pool, poolAmount, poolAmountError, selectedPool } =
+    const { loading, poolAmount, poolAmountError, selectedPool } =
       this.state;
 
     return (
@@ -670,7 +666,7 @@ console.log(basePools)
 
   renderDeposit = () => {
     const { classes } = this.props;
-    const { loading, pools, pool, selectedPool } = this.state;
+    const { loading, selectedPool } = this.state;
     console.log("loading", loading);
     return (
       <React.Fragment>
@@ -714,8 +710,6 @@ console.log(basePools)
 
     const { depositAmount = 0, slippagePcent, selectedPool } = this.state;
     // console.log(depositAmount)
-    let amount = depositAmount;
-    if (!depositAmount) amount = 0.0;
     if (selectedPool && !selectedPool.isPoolSeeded) return null;
 
     return (
@@ -772,7 +766,7 @@ console.log(basePools)
 
   renderWithdraw = () => {
     const { classes } = this.props;
-    const { loading, pools, pool } = this.state;
+    const { loading } = this.state;
 
     return (
       <React.Fragment>
@@ -926,7 +920,7 @@ console.log(basePools)
 
     this.setState({ activeTab: "deposit", poolAmount: "" });
 
-    let { pools, pool, selectedPool } = this.state;
+    let { pools, selectedPool } = this.state;
 
     if (!selectedPool) {
       return false;
@@ -995,7 +989,7 @@ console.log(basePools)
   };
 
   onDeposit = () => {
-    const { pool, pools, selectedPool } = this.state;
+    const { selectedPool } = this.state;
 
     let error = false;
 
@@ -1019,7 +1013,7 @@ console.log(basePools)
   onWithdraw = () => {
     this.setState({ poolAmountError: false });
 
-    const { poolAmount, pool, pools, selectedPool } = this.state;
+    const { poolAmount, selectedPool } = this.state;
 
     if (
       !poolAmount ||
