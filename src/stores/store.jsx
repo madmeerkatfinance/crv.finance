@@ -108,6 +108,36 @@ class Store {
             },
           ],
         },
+        {
+          id: "bcroMM",
+          name: "CRO/bCRO Pool",
+          address: "0xbF369D9c0Ab3107F4823a39B2fD2Ca0Ff5310425",
+          tokenAddress: "0xB996cE5bd3551C3A95A39AFb7dfdDD552657e38e", // MM bCRO
+          balance: 0,
+          decimals: 18,
+          assets: [
+            {
+              index: 0,
+              id: "CRO",
+              name: "CRO",
+              symbol: "CRO",
+              description: "CRO",
+              erc20address: "0x5C7F8A570d578ED84E63fdFA7b1eE72dEae1AE23",
+              balance: 0,
+              decimals: 18,
+            },
+            {
+              index: 1,
+              id: "bCRO",
+              name: "Bonded CRO",
+              symbol: "bCRO",
+              description: "bCRO",
+              erc20address: "0xeBAceB7F193955b946cC5dd8f8724a80671a1F2F",
+              balance: 0,
+              decimals: 18,
+            },
+          ],
+        },
         // {
         //   id: 'BTC',
         //   name: 'renBTC/wBTC/sBTC Pool',
@@ -417,36 +447,72 @@ class Store {
   };
 
   _getCoinData = memoize(
-    async ({ web3, filteredCoins, coinAddress, accountAddress }) => {
-      const erc20Contract0 = new web3.eth.Contract(
-        config.erc20ABI,
-        coinAddress
-      );
+    async ({ web3, filteredCoins, pool, coinAddress, accountAddress }) => {
 
-      const symbol0 = await erc20Contract0.methods.symbol().call();
-      const decimals0 = parseInt(
-        await erc20Contract0.methods.decimals().call()
-      );
-      const name0 = await erc20Contract0.methods.name().call();
-
-      let balance0 = await erc20Contract0.methods
-        .balanceOf(accountAddress)
-        .call();
-      const bnDecimals0 = new BigNumber(10).pow(decimals0);
-
-      balance0 = new BigNumber(balance0)
-        .dividedBy(bnDecimals0)
-        .toFixed(decimals0, BigNumber.ROUND_DOWN);
-
-      // console.log(filteredCoins, coinAddress, filteredCoins.indexOf(coinAddress))
-      return {
-        index: filteredCoins.indexOf(coinAddress),
-        erc20address: coinAddress,
-        symbol: symbol0,
-        decimals: decimals0,
-        name: name0,
-        balance: balance0,
-      };
+      if (pool.id === "bcroMM") {
+        
+        console.log("???? HELP")
+        const erc20Contract0 = new web3.eth.Contract(
+          config.erc20ABI,
+          coinAddress
+        );
+  
+        const symbol0 = await erc20Contract0.methods.symbol().call();
+        const decimals0 = parseInt(
+          await erc20Contract0.methods.decimals().call()
+        );
+        const name0 = await erc20Contract0.methods.name().call();
+  
+        let balance0 = coinAddress === "0x5C7F8A570d578ED84E63fdFA7b1eE72dEae1AE23" ? await web3.eth.getBalance(accountAddress) : await erc20Contract0.methods
+          .balanceOf(accountAddress)
+          .call();
+        const bnDecimals0 = new BigNumber(10).pow(decimals0);
+  
+        balance0 = new BigNumber(balance0)
+          .dividedBy(bnDecimals0)
+          .toFixed(decimals0, BigNumber.ROUND_DOWN);
+  
+        // console.log(filteredCoins, coinAddress, filteredCoins.indexOf(coinAddress))
+        return {
+          index: filteredCoins.indexOf(coinAddress),
+          erc20address: coinAddress,
+          symbol: symbol0,
+          decimals: decimals0,
+          name: name0,
+          balance: balance0,
+        };
+      } else {
+        const erc20Contract0 = new web3.eth.Contract(
+          config.erc20ABI,
+          coinAddress
+        );
+  
+        const symbol0 = await erc20Contract0.methods.symbol().call();
+        const decimals0 = parseInt(
+          await erc20Contract0.methods.decimals().call()
+        );
+        const name0 = await erc20Contract0.methods.name().call();
+  
+        let balance0 = await erc20Contract0.methods
+          .balanceOf(accountAddress)
+          .call();
+        const bnDecimals0 = new BigNumber(10).pow(decimals0);
+  
+        balance0 = new BigNumber(balance0)
+          .dividedBy(bnDecimals0)
+          .toFixed(decimals0, BigNumber.ROUND_DOWN);
+  
+        // console.log(filteredCoins, coinAddress, filteredCoins.indexOf(coinAddress))
+        return {
+          index: filteredCoins.indexOf(coinAddress),
+          erc20address: coinAddress,
+          symbol: symbol0,
+          decimals: decimals0,
+          name: name0,
+          balance: balance0,
+        };
+      }
+      
     },
     {
       promise: true,
@@ -509,6 +575,7 @@ class Store {
               filteredCoins,
               coinAddress: coin,
               accountAddress: account.address,
+              pool,
             });
 
             if (callbackInner) {
@@ -585,7 +652,7 @@ class Store {
       balance = new BigNumber(balance)
         .dividedBy(bnDecimals)
         .toFixed(decimals, BigNumber.ROUND_DOWN);
-
+      console.log(pool.assets)
       async.map(
         pool.assets,
         async (coin, callbackInner) => {
@@ -595,6 +662,7 @@ class Store {
               filteredCoins: pool.assets.map((x) => x.erc20address),
               coinAddress: coin.erc20address,
               accountAddress: account.address,
+              pool
             });
 
             if (callbackInner) {
@@ -753,7 +821,7 @@ class Store {
     callback
   ) => {
     const basePoolContract = new web3.eth.Contract(
-      config.basePoolABI,
+      pool.id === "bcroMM" ? config.basePool2TokenABI : config.basePoolABI,
       pool.address
     );
     let receive = "0";
@@ -761,6 +829,7 @@ class Store {
       const amountToReceive = await basePoolContract.methods
         .calc_token_amount(amounts, true)
         .call();
+        console.log({amountToReceive})
       receive = new BigNumber(amountToReceive)
         .times(95)
         .dividedBy(100)
@@ -770,40 +839,64 @@ class Store {
       // if we can't calculate, we need to check the totalSupply
       // if 0, we just set receive to 0
       // if not 0, we throw an exception because it shouldn't be.
-      const tokenContract = new web3.eth.Contract(
-        config.erc20ABI,
-        pool.address
-      );
-      const totalSupply = await tokenContract.methods.totalSupply().call();
-      console.log(totalSupply);
-      if (totalSupply == 0) {
-        receive = "0";
-      } else {
-        return callback(ex);
-      }
+      // const tokenContract = new web3.eth.Contract(
+      //   config.erc20ABI,
+      //   pool.address
+      // );
+      // const totalSupply = await tokenContract.methods.totalSupply().call();
+      receive = "0";
+      // if (totalSupply == 0) {
+      //   receive = "0";
+      // } else {
+      //   return callback(ex);
+      // }
     }
 
     console.log(pool.address, amounts, receive);
     // There's a UI bug in the amounts passed as well.
-    basePoolContract.methods
-      .add_liquidity(amounts, receive)
-      .send({ from: account.address })
-      .on("transactionHash", function (hash) {
-        emitter.emit(SNACKBAR_TRANSACTION_HASH, hash);
-        callback(null, hash);
-      })
-      .on("confirmation", function (confirmationNumber, receipt) {
-        if (confirmationNumber === 1) {
-          dispatcher.dispatch({ type: CONFIGURE, content: {} });
-        }
-      })
-      .on("receipt", function (receipt) {})
-      .on("error", function (error) {
-        if (error.message) {
-          return callback(error.message);
-        }
-        callback(error);
-      });
+
+    if (pool.id === "bcroMM") {
+      basePoolContract.methods
+        .add_liquidity(amounts, receive)
+        .send({ from: account.address, value: amounts[0] })
+        .on("transactionHash", function (hash) {
+          emitter.emit(SNACKBAR_TRANSACTION_HASH, hash);
+          callback(null, hash);
+        })
+        .on("confirmation", function (confirmationNumber, receipt) {
+          if (confirmationNumber === 1) {
+            dispatcher.dispatch({ type: CONFIGURE, content: {} });
+          }
+        })
+        .on("receipt", function (receipt) {})
+        .on("error", function (error) {
+          if (error.message) {
+            return callback(error.message);
+          }
+          callback(error);
+        });
+    } else {
+      basePoolContract.methods
+        .add_liquidity(amounts, receive)
+        .send({ from: account.address })
+        .on("transactionHash", function (hash) {
+          emitter.emit(SNACKBAR_TRANSACTION_HASH, hash);
+          callback(null, hash);
+        })
+        .on("confirmation", function (confirmationNumber, receipt) {
+          if (confirmationNumber === 1) {
+            dispatcher.dispatch({ type: CONFIGURE, content: {} });
+          }
+        })
+        .on("receipt", function (receipt) {})
+        .on("error", function (error) {
+          if (error.message) {
+            return callback(error.message);
+          }
+          callback(error);
+        });
+    }
+    
   };
 
   _callAddLiquidity = async (web3, account, pool, amounts, callback) => {
@@ -983,8 +1076,9 @@ class Store {
     amountToSend,
     callback
   ) => {
+    // If it is bcroMM token, we will use the ABI that utillises 2 tokens
     const basePoolContract = new web3.eth.Contract(
-      config.basePoolABI,
+      pool.id === "bcroMM" ? config.basePool2TokenABI : config.basePoolABI,
       pool.address
     );
 
@@ -1320,7 +1414,7 @@ class Store {
       });
 
       const poolContract = new web3.eth.Contract(
-        config.basePoolABI,
+        pool.id === "bcroMM" ? config.basePool2TokenABI : config.basePoolABI,
         pool.address
       );
       const [receiveAmountBn, virtPriceBn] = await Promise.all([

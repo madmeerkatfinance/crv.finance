@@ -225,7 +225,7 @@ class ThreePools extends Component {
     const account = store.getStore("account");
 
     const basePools = store.getStore("basePools");
-
+console.log(basePools)
     const selectedBasePool =
       basePools && basePools.length > 0 ? basePools[0] : null;
 
@@ -327,7 +327,7 @@ class ThreePools extends Component {
     return Object.assign(
       {},
       ...selectedPool.assets.map(({ symbol, balance, decimals }) => ({
-        [`${symbol}Amount`]: floatToFixed(0, decimals),
+        [`${symbol}Amount`]: floatToFixed(balance, decimals),
       }))
     );
   };
@@ -407,12 +407,11 @@ class ThreePools extends Component {
               align="center"
               className={classes.poolInfoHeader}
             >
-              Create 3MM LP
+              Create LP
             </Typography>
             <div style={{ marginBottom: 10 }}></div>
             <Alert icon={false} className={classes.infoAlert}>
-              Add DAI, USDC, and USDT to get 3MM LP. You can stake stablecoin
-              3MM LPs for high APR at{" "}
+              Select a pool that you wish to add liquidity into. You can stake these LPs for high APR at{" "}
               <a
                 href="https://mm.finance/farms"
                 target="_blank"
@@ -590,7 +589,8 @@ class ThreePools extends Component {
   };
 
   renderPoolSelect = (id) => {
-    const { loading, basePools, basePool } = this.state;
+    const { loading, basePools, basePool, selectedPool } = this.state;
+    console.log({basePools, basePool})
     const { classes } = this.props;
     return (
       <div className={classes.valContainer}>
@@ -621,7 +621,7 @@ class ThreePools extends Component {
                       className={classes.multiAssetSelectIcon}
                     /> */}
                     <div className={classes.assetSelectIconName}>
-                      <Typography variant="h4">{option}</Typography>
+                      <Typography variant="h4">{selectedPool ? selectedPool.name : option}</Typography>
                     </div>
                   </div>
                 );
@@ -884,21 +884,22 @@ class ThreePools extends Component {
   };
 
   onPoolSelectChange = (event) => {
-    // const selectedPool = this.state.basePools.find((pool) => {
-    //   return pool.id === event.target.value
-    // })
-    // const newStateSlice = {
-    //   [event.target.name]: event.target.value,
-    //   selectedPool,
-    //   ...this.getStateSliceUserBalancesForSelectedPool(selectedPool),
-    // };
-    // this.setState(newStateSlice);
-    // this.getDepositAmount(newStateSlice);
-    // // If an url fragment was used to auto-select a pool, remove that
-    // // fragment when we change pool to revert to the naked /liquidity url.
-    // if (this.props.history.location.hash !== '') {
-    //   this.props.history.replace('/liquidity');
-    // }
+    const selectedPool = this.state.basePools.find((pool) => {
+      return pool.id === event.target.value
+    })
+    console.log(event.target)
+    const newStateSlice = {
+      basePool: event.target.value,
+      selectedPool,
+      ...this.getStateSliceUserBalancesForSelectedPool(selectedPool),
+    };
+    this.setState(newStateSlice);
+    this.getDepositAmount(newStateSlice);
+    // If an url fragment was used to auto-select a pool, remove that
+    // fragment when we change pool to revert to the naked /liquidity url.
+    if (this.props.history.location.hash !== '') {
+      this.props.history.replace('/liquidity');
+    }
   };
 
   onChange = (event) => {
