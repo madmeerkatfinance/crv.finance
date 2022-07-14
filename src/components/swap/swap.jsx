@@ -242,7 +242,7 @@ const styles = (theme) => ({
 
 class Swap extends Component {
   constructor(props) {
-    super();
+    super(props);
 
     const account = store.getStore("account");
     const pools = store.getStore("pools");
@@ -254,11 +254,11 @@ class Swap extends Component {
       selectedPool: selectedPool,
       fromAsset:
         selectedPool && selectedPool.assets.length > 0
-          ? selectedPool.assets[0].symbol
+          ? selectedPool.assets[2].symbol
           : "",
       toAsset:
         selectedPool && selectedPool.assets.length > 0
-          ? selectedPool.assets[1].symbol
+          ? selectedPool.assets[0].symbol
           : "",
       account: account,
       fromAmount: "",
@@ -327,11 +327,11 @@ class Swap extends Component {
       selectedPool: selectedPool,
       fromAsset:
         selectedPool && selectedPool.assets.length > 0
-          ? selectedPool.assets[0].symbol
+          ? selectedPool.assets[2].symbol
           : "",
       toAsset:
         selectedPool && selectedPool.assets.length > 0
-          ? selectedPool.assets[1].symbol
+          ? selectedPool.assets[0].symbol
           : "",
     });
   };
@@ -695,8 +695,8 @@ class Swap extends Component {
 
     //on change pool change assets as well
     this.setState({
-      fromAsset: selectedPool.assets[0].symbol,
-      toAsset: selectedPool.assets[1].symbol,
+      fromAsset: selectedPool.assets[2].symbol,
+      toAsset: selectedPool.assets[0].symbol,
       selectedPool,
       toAmount: "",
       receivePerSend: "",
