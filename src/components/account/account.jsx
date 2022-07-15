@@ -1,107 +1,93 @@
-import React, { Component } from "react";
-import { withRouter } from "react-router-dom";
-import { withStyles } from "@material-ui/core/styles";
-import { Typography, Button } from "@material-ui/core";
-import { colors } from "../../theme";
+import React from 'react'
+import { withRouter } from 'react-router-dom'
+import { withStyles } from '@material-ui/core/styles'
+import { Typography, Button } from '@material-ui/core'
+import { colors } from '../../theme'
 
-import UnlockModal from "../unlock/unlockModal.jsx";
+import UnlockModal from '../unlock/unlockModal.jsx'
 
-const styles = (theme) => ({
+const styles = () => ({
   root: {
     flex: 1,
-    display: "flex",
-    flexDirection: "column",
-    backgroundImage: "linear-gradient(to bottom right, #b08653, #c6a276)",
+    display: 'flex',
+    flexDirection: 'column',
+    backgroundImage: 'linear-gradient(to bottom right, #b08653, #c6a276)',
 
     // background: colors.purple,
-    minWidth: "100vw",
-    padding: "36px 24px",
+    minWidth: '100vw',
+    padding: '36px 24px'
   },
   connectHeading: {
-    maxWidth: "300px",
-    textAlign: "center",
-    color: colors.white,
+    maxWidth: '300px',
+    textAlign: 'center',
+    color: colors.white
   },
   connectContainer: {
-    padding: "20px",
+    padding: '20px'
   },
   actionButton: {
     color: colors.white,
-    borderColor: colors.white,
+    borderColor: colors.white
   },
   notConnectedRoot: {
     flex: 1,
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "center",
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   connectedRoot: {
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "flex-start",
-    alignItems: "flex-start",
-    width: "100%",
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
+    width: '100%'
   },
   address: {
     color: colors.white,
-    width: "100%",
-    paddingBottom: "24px",
-    display: "flex",
-    justifyContent: "space-between",
+    width: '100%',
+    paddingBottom: '24px',
+    display: 'flex',
+    justifyContent: 'space-between'
   },
   balances: {
     color: colors.white,
-    width: "100%",
-    padding: "12px",
+    width: '100%',
+    padding: '12px'
   },
   balanceContainer: {
-    display: "flex",
-    width: "100%",
-    justifyContent: "space-between",
+    display: 'flex',
+    width: '100%',
+    justifyContent: 'space-between'
   },
   accountHeading: {
-    paddingBottom: "6px",
+    paddingBottom: '6px'
   },
   icon: {
-    cursor: "pointer",
+    cursor: 'pointer'
   },
   disclaimer: {
-    padding: "12px",
-    border: "1px solid " + colors.white,
-    borderRadius: "0.75rem",
-    marginBottom: "24px",
+    padding: '12px',
+    border: '1px solid ' + colors.white,
+    borderRadius: '0.75rem',
+    marginBottom: '24px',
     fontWeight: 1,
-    color: colors.white,
-  },
-});
+    color: colors.white
+  }
+})
 
-class Account extends Component {
-  constructor(props) {
-    super();
+const Account = ({ classes }) => {
+  const [modalOpen, setModalOpen] = React.useState(false)
 
-    this.state = {
-      loading: false,
-      modalOpen: false,
-    };
+  const unlockClicked = () => {
+    setModalOpen(true)
   }
 
-  render() {
-    const { classes } = this.props;
-    const { modalOpen } = this.state;
-
-    return (
-      <div className={classes.root}>
-        {this.renderNotConnected()}
-        {modalOpen && this.renderModal()}
-      </div>
-    );
+  const closeModal = () => {
+    setModalOpen(true)
   }
 
-  renderNotConnected = () => {
-    const { classes } = this.props;
-    const { loading } = this.state;
-
+  const renderNotConnected = () => {
     return (
       <div className={classes.notConnectedRoot}>
         {/* <Typography variant={'h5'} className={ classes.disclaimer }>This project is in beta. Use at your own risk.</Typography> */}
@@ -113,32 +99,31 @@ class Account extends Component {
             className={classes.actionButton}
             variant="outlined"
             color="primary"
-            onClick={this.unlockClicked}
-            disabled={loading}
+            onClick={unlockClicked}
+            disabled={modalOpen}
           >
             <Typography>Connect</Typography>
           </Button>
         </div>
       </div>
-    );
-  };
+    )
+  }
 
-  renderModal = () => {
+  const renderModal = () => {
     return (
       <UnlockModal
-        closeModal={this.closeModal}
-        modalOpen={this.state.modalOpen}
+        closeModal={closeModal}
+        modalOpen={modalOpen}
       />
-    );
-  };
+    )
+  }
 
-  unlockClicked = () => {
-    this.setState({ modalOpen: true, loading: true });
-  };
-
-  closeModal = () => {
-    this.setState({ modalOpen: false, loading: false });
-  };
+  return (
+    <div className={classes.root}>
+      {renderNotConnected()}
+      {modalOpen && renderModal()}
+    </div>
+  )
 }
 
-export default withRouter(withStyles(styles)(Account));
+export default withRouter(withStyles(styles)(Account))

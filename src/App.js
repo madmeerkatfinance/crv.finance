@@ -17,7 +17,7 @@ import Liquidity from "./components/liquidity";
 import AddPool from "./components/addPool";
 import bg from "./assets/meerkat_light.png";
 
-import { injected, deficonnect } from "./stores/connectors";
+import { injected } from "./stores/connectors";
 
 import {
   CONNECTION_CONNECTED,

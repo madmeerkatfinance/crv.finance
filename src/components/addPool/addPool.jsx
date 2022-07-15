@@ -256,7 +256,6 @@ class AddPool extends Component {
   constructor(props) {
     super();
 
-    const account = store.getStore("account");
     const pools = store.getStore("pools");
     const basePools = store.getStore("basePools");
 
@@ -505,7 +504,7 @@ class AddPool extends Component {
   };
 
   renderAssetInfo = () => {
-    const { assetInfo, selectedBasePool, name, symbol, fee, a } = this.state;
+    const { assetInfo, selectedBasePool, name, symbol } = this.state;
     const { classes } = this.props;
 
     /*

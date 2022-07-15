@@ -1,7 +1,5 @@
 import createBreakpoints from "@material-ui/core/styles/createBreakpoints";
 
-import WorkSansTTF from "../assets/fonts/WorkSans-VariableFont_wght.ttf";
-
 const WorkSans = {
   fontFamily: "ui-sans-serif",
   fontStyle: "normal",
