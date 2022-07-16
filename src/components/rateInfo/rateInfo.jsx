@@ -34,10 +34,10 @@ const RateInfo = ({
 
 RateInfo.propTypes = {
   classes: PropTypes.object.isRequired,
-  receivePerSend: PropTypes.number,
-  sendPerReceive: PropTypes.number,
-  fromAsset: PropTypes.number,
-  toAsset: PropTypes.number,
+  receivePerSend: PropTypes.string,
+  sendPerReceive: PropTypes.string,
+  fromAsset: PropTypes.string,
+  toAsset: PropTypes.string,
 };
 
 RateInfo.defaultProps = {

@@ -24,7 +24,6 @@ import {
   GET_DEPOSIT_AMOUNT,
   GET_DEPOSIT_AMOUNT_RETURNED,
   GET_SWAP_AMOUNT,
-  GET_WITHDRAW_AMOUNT,
   MAX_UINT256,
   SLIPPAGE_INFO_RETURNED,
   SNACKBAR_ERROR,
@@ -394,11 +393,13 @@ class Store {
       )
       const poolCount = await curveFactoryContract.methods.pool_count().call()
 
-      const pools = await Promise.all(
-        [...Array(parseInt(poolCount)).keys()].map((i) =>
-          curveFactoryContract.methods.pool_list(i).call()
-        )
-      )
+      const calls = [...Array(parseInt(poolCount)).keys()].map((i) => ({
+        name: 'pool_list',
+        address: config.curveFactoryV2Address,
+        params: [i]
+      }))
+
+      const [pools] = await this._multicall(config.curveFactoryV2ABI, calls)
       // console.log("pools", pools, poolCount)
 
       return pools.map((poolAddress) => {
@@ -442,7 +443,6 @@ class Store {
         console.log('???? HELP')
         balance = await web3.eth.getBalance(accountAddress)
       } else {
-        console.log('1111')
         balance = await erc20Contract.methods
           .balanceOf(accountAddress)
           .call()
@@ -598,7 +598,7 @@ class Store {
       balance = new BigNumber(balance)
         .dividedBy(bnDecimals)
         .toFixed(decimals, BigNumber.ROUND_DOWN)
-      console.log(pool.assets)
+
       async.map(
         pool.assets,
         async (coin, callbackInner) => {
