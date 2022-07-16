@@ -292,11 +292,13 @@ class Swap extends Component {
 
   configureReturned = () => {
     const pools = store.getStore("pools");
+    const basePools = store.getStore("basePools");
     const selectedPool = pools && pools.length > 0 ? pools[0] : null;
-
+    console.log([pools[0], basePools[1]])
     this.setState({
       account: store.getStore("account"),
-      pools: pools,
+      // This is special logic to ensure we only take MUSD-3MM pool & bCRO-CRO pool (in future we can relax this)
+      pools: [pools[0], basePools[1]],
       pool: selectedPool ? selectedPool.id : "",
       selectedPool: selectedPool,
       fromAsset:
@@ -692,10 +694,10 @@ class Swap extends Component {
     const selectedPool = this.state.pools.find((pool) => {
       return pool.id === event.target.value;
     });
-
+    console.log(selectedPool);
     //on change pool change assets as well
     this.setState({
-      fromAsset: selectedPool.assets[2].symbol,
+      fromAsset: selectedPool.assets[selectedPool.assets.length-1].symbol,
       toAsset: selectedPool.assets[0].symbol,
       selectedPool,
       toAmount: "",
