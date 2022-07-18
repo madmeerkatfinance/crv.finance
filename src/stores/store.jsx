@@ -425,18 +425,57 @@ class Store {
     return emitter.emit(BALANCES_RETURNED)
   }
 
-  _getCoinData = memoize(
-    async ({ web3, filteredCoins, pool, coinAddress, accountAddress }) => {
-      const erc20Contract = new web3.eth.Contract(
-        config.erc20ABI,
-        coinAddress
-      )
+  _retrieveTokenInfos = async (coinAddress) => {
+    const cachedToken = window.localStorage.getItem('tokenInfos')
+    let parsedTokenInfos
+    if (cachedToken) {
+      parsedTokenInfos = JSON.parse(cachedToken)
+      if (parsedTokenInfos[coinAddress] && (new Date().getTime() - parsedTokenInfos.updatedAt) / 120000) {
+        return parsedTokenInfos[coinAddress]
+      }
+    }
+    try {
       const calls = ['symbol', 'decimals', 'name'].map((method) => ({
         name: method,
         address: coinAddress
       }))
 
       const [[symbol], [decimalsResp], [name]] = await this._multicall(config.erc20ABI, calls)
+      if (parsedTokenInfos) {
+        parsedTokenInfos[coinAddress] = {
+          symbol,
+          decimals: parseInt(decimalsResp),
+          name
+        }
+        parsedTokenInfos.updatedAt = new Date().getTime()
+        window.localStorage.setItem('tokenInfos', JSON.stringify(parsedTokenInfos))
+      } else {
+        window.localStorage.setItem('tokenInfos', JSON.stringify({
+          [coinAddress]: {
+            symbol,
+            decimals: parseInt(decimalsResp),
+            name
+          },
+          updatedAt: new Date().getTime()
+        }))
+      }
+      return {
+        symbol,
+        decimals: parseInt(decimalsResp),
+        name
+      }
+    } catch (e) {
+      return parsedTokenInfos[coinAddress]
+    }
+  }
+
+  _getCoinData = memoize(
+    async ({ web3, filteredCoins, pool, coinAddress, accountAddress }) => {
+      const { symbol, decimals, name } = await this._retrieveTokenInfos(coinAddress)
+      const erc20Contract = new web3.eth.Contract(
+        config.erc20ABI,
+        coinAddress
+      )
 
       let balance
       if (pool.id === 'bcroMM' && coinAddress === '0x5C7F8A570d578ED84E63fdFA7b1eE72dEae1AE23') {
@@ -448,7 +487,6 @@ class Store {
           .call()
       }
 
-      const decimals = parseInt(decimalsResp)
       const bnDecimals = new BigNumber(10).pow(decimals)
 
       balance = new BigNumber(balance)
@@ -478,17 +516,11 @@ class Store {
         config.erc20ABI,
         pool.address
       )
-      const calls = ['symbol', 'decimals', 'name'].map((method) => ({
-        name: method,
-        address: pool.address
-      }))
-
-      const [[symbol], [decimalsResp], [name]] = await this._multicall(config.erc20ABI, calls)
+      const { symbol, name, decimals } = await this._retrieveTokenInfos(pool.address)
 
       let balance = await erc20Contract.methods
         .balanceOf(account.address)
         .call()
-      const decimals = parseInt(decimalsResp)
       const bnDecimals = new BigNumber(10).pow(decimals)
 
       balance = new BigNumber(balance)
@@ -560,7 +592,7 @@ class Store {
             liquidityAddress: liquidityAddress,
             liquidityABI: liquidityABI,
             symbol: symbol,
-            decimals: decimals,
+            decimals,
             name: name,
             balance: balance.toString(),
             isPoolSeeded,
@@ -581,18 +613,11 @@ class Store {
         config.erc20ABI,
         pool.tokenAddress
       )
-
-      const calls = ['symbol', 'decimals', 'name'].map((method) => ({
-        name: method,
-        address: pool.tokenAddress
-      }))
-
-      const [[symbol], [decimalsResp], [name]] = await this._multicall(config.erc20ABI, calls)
+      const { symbol, decimals, name } = await this._retrieveTokenInfos(pool.tokenAddress)
 
       let balance = await erc20Contract.methods
         .balanceOf(account.address)
         .call()
-      const decimals = parseInt(decimalsResp)
       const bnDecimals = new BigNumber(10).pow(decimals)
 
       balance = new BigNumber(balance)
@@ -647,7 +672,7 @@ class Store {
             address: pool.address,
             tokenAddress: pool.tokenAddress,
             symbol: symbol,
-            decimals: decimals,
+            decimals,
             name: name,
             balance: balance.toString(),
             isPoolSeeded: true,
@@ -1160,17 +1185,11 @@ class Store {
 
       const erc20Contract = new web3.eth.Contract(config.erc20ABI, address)
 
-      const calls = ['symbol', 'decimals', 'name'].map((method) => ({
-        name: method,
-        address
-      }))
-
-      const [[symbol], [decimalsResp], [name]] = await this._multicall(config.erc20ABI, calls)
+      const { symbol, decimals, name } = await this._retrieveTokenInfos(address)
 
       let balance = await erc20Contract.methods
         .balanceOf(account.address)
         .call()
-      const decimals = parseInt(decimalsResp)
       const bnDecimals = new BigNumber(10).pow(decimals)
 
       balance = new BigNumber(balance)
@@ -1180,7 +1199,7 @@ class Store {
       const returnObj = {
         address: address,
         symbol: symbol,
-        decimals: decimals,
+        decimals,
         name: name,
         balance: balance
       }
