@@ -31,6 +31,7 @@ import {
   SWAP,
   SWAP_AMOUNT_RETURNED,
   SWAP_RETURNED,
+  WCRO_TOKEN,
   WITHDRAW,
   WITHDRAW_BASE,
   WITHDRAW_RETURNED,
@@ -107,7 +108,7 @@ class Store {
               name: 'CRO',
               symbol: 'CRO',
               description: 'CRO',
-              erc20address: '0x5C7F8A570d578ED84E63fdFA7b1eE72dEae1AE23',
+              erc20address: WCRO_TOKEN,
               balance: 0,
               decimals: 18
             },
@@ -471,16 +472,18 @@ class Store {
 
   _getCoinData = memoize(
     async ({ web3, filteredCoins, pool, coinAddress, accountAddress }) => {
-      const { symbol, decimals, name } = await this._retrieveTokenInfos(coinAddress)
       const erc20Contract = new web3.eth.Contract(
         config.erc20ABI,
         coinAddress
       )
 
+      let { symbol, decimals, name } = await this._retrieveTokenInfos(coinAddress)
+
       let balance
-      if (pool.id === 'bcroMM' && coinAddress === '0x5C7F8A570d578ED84E63fdFA7b1eE72dEae1AE23') {
-        console.log('???? HELP')
+      if (pool.id === 'bcroMM' && coinAddress === WCRO_TOKEN) {
         balance = await web3.eth.getBalance(accountAddress)
+        symbol = "CRO";
+        name = "CRO";
       } else {
         balance = await erc20Contract.methods
           .balanceOf(accountAddress)
@@ -516,11 +519,23 @@ class Store {
         config.erc20ABI,
         pool.address
       )
-      const { symbol, name, decimals } = await this._retrieveTokenInfos(pool.address)
 
-      let balance = await erc20Contract.methods
-        .balanceOf(account.address)
-        .call()
+      let { symbol, name, decimals } = await this._retrieveTokenInfos(pool.address)
+
+      let balance
+      if (pool.id === 'bcroMM' && pool.address === WCRO_TOKEN) {
+        balance = await web3.eth.getBalance(account.address)
+        symbol = "CRO";
+        name = "CRO";
+      } else {
+        balance = await erc20Contract.methods
+          .balanceOf(account.address)
+          .call()
+      }
+
+      // let balance = await erc20Contract.methods
+      //   .balanceOf(account.address)
+      //   .call()
       const bnDecimals = new BigNumber(10).pow(decimals)
 
       balance = new BigNumber(balance)
@@ -613,11 +628,23 @@ class Store {
         config.erc20ABI,
         pool.tokenAddress
       )
-      const { symbol, decimals, name } = await this._retrieveTokenInfos(pool.tokenAddress)
 
-      let balance = await erc20Contract.methods
-        .balanceOf(account.address)
-        .call()
+      let { symbol, decimals, name } = await this._retrieveTokenInfos(pool.tokenAddress)
+
+      let balance
+      if (pool.id === 'bcroMM' && pool.tokenAddress === WCRO_TOKEN) {
+        balance = await web3.eth.getBalance(account.address)
+        symbol = "CRO";
+        name = "CRO";
+      } else {
+        balance = await erc20Contract.methods
+          .balanceOf(account.address)
+          .call()
+      }
+
+      // let balance = await erc20Contract.methods
+      //   .balanceOf(account.address)
+      //   .call()
       const bnDecimals = new BigNumber(10).pow(decimals)
 
       balance = new BigNumber(balance)
@@ -1058,12 +1085,16 @@ class Store {
         amountToSend = new BigNumber(amount).times(decimals).toFixed(0)
       }
       const metapoolContract = new web3.eth.Contract(
-        config.metapoolABI,
+        pool.id === 'bcroMM' ? config.basePool2TokenABI : config.metapoolABI,
         pool.address
       )
+      // const metapoolContract = new web3.eth.Contract(
+      //   config.metapoolABI,
+      //   pool.address
+      // )
       // console.log(from.index, to.index, amountToSend)
       const amountToReceive = await metapoolContract.methods
-        .get_dy_underlying(from.index, to.index, amountToSend)
+        [pool.id === 'bcroMM' ? "get_dy" : "get_dy_underlying"](from.index, to.index, amountToSend)
         .call()
 
       const receiveAmount = amountToReceive / 10 ** to.decimals
@@ -1107,7 +1138,7 @@ class Store {
           pool.address
         )
         const amountToReceive = await metapoolContract.methods
-          .get_dy_underlying(from.index, to.index, amountToSend)
+          [pool.id === 'bcroMM' ? "get_dy" : "get_dy_underlying"](from.index, to.index, amountToSend)
           .call()
 
         this._callExchange(
@@ -1145,7 +1176,7 @@ class Store {
     callback
   ) => {
     const metapoolContract = new web3.eth.Contract(
-      config.metapoolABI,
+      pool.id === 'bcroMM' ? config.basePool2TokenABI : config.metapoolABI,
       pool.address
     )
 
@@ -1156,8 +1187,8 @@ class Store {
 
     // console.log(from.index, to.index, amountToSend, receive);
     metapoolContract.methods
-      .exchange_underlying(from.index, to.index, amountToSend, receive)
-      .send({ from: account.address })
+      [pool.id === 'bcroMM' ? "exchange" : "exchange_underlying"](from.index, to.index, amountToSend, receive)
+      .send({ from: account.address, ...(pool.id === 'bcroMM' && from.erc20address === WCRO_TOKEN ? { value: amountToSend } : {}) })
       .on('transactionHash', function (hash) {
         emitter.emit(SNACKBAR_TRANSACTION_HASH, hash)
         callback(null, hash)
@@ -1179,17 +1210,28 @@ class Store {
 
   getAssetInfo = async (payload) => {
     try {
-      const { address } = payload.content
+      const { address, id } = payload.content
       const account = store.getStore('account')
       const web3 = await this._getWeb3Provider()
 
       const erc20Contract = new web3.eth.Contract(config.erc20ABI, address)
 
-      const { symbol, decimals, name } = await this._retrieveTokenInfos(address)
+      let { symbol, decimals, name } = await this._retrieveTokenInfos(address)
 
-      let balance = await erc20Contract.methods
-        .balanceOf(account.address)
-        .call()
+      let balance
+      if (id === 'bcroMM' && address === WCRO_TOKEN) {
+        balance = await web3.eth.getBalance(account.address)
+        symbol = "CRO";
+        name = "CRO";
+      } else {
+        balance = await erc20Contract.methods
+          .balanceOf(account.address)
+          .call()
+      }
+
+      // let balance = await erc20Contract.methods
+      //   .balanceOf(account.address)
+      //   .call()
       const bnDecimals = new BigNumber(10).pow(decimals)
 
       balance = new BigNumber(balance)

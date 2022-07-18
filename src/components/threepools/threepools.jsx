@@ -460,7 +460,7 @@ console.log(basePools)
 
     const { loading, poolAmount, poolAmountError, selectedPool } =
       this.state;
-
+    console.log({selectedPool})
     return (
       <div className={classes.valContainer}>
         <div className={classes.flexy}>
@@ -525,7 +525,7 @@ console.log(basePools)
   renderPoolSelectAsset = (id) => {
     const { loading, pools } = this.state;
     const { classes } = this.props;
-
+console.log({loading, pools})
     return (
       <TextField
         id={id}
@@ -538,6 +538,7 @@ console.log(basePools)
           renderValue: (option) => {
             return (
               <div className={classes.assetSelectIconName}>
+                {id}
                 <Typography variant="h4">{option}</Typography>
               </div>
             );
@@ -555,7 +556,7 @@ console.log(basePools)
 
   renderPoolSelectAssetOptions = (option) => {
     const { classes } = this.props;
-
+    console.log({option})
     return (
       <MenuItem
         key={option.id}
@@ -585,8 +586,7 @@ console.log(basePools)
   };
 
   renderPoolSelect = (id) => {
-    const { loading, basePools, basePool, selectedPool } = this.state;
-    console.log({basePools, basePool})
+    const { loading, pools, basePool, selectedPool } = this.state;
     const { classes } = this.props;
     return (
       <div className={classes.valContainer}>
@@ -629,8 +629,8 @@ console.log(basePools)
             className={classes.actionInput}
             placeholder={"Select"}
           >
-            {basePools
-              ? basePools.map((basePool) => {
+            {pools
+              ? pools.map((basePool) => {
                   return this.renderPoolOption(basePool);
                 })
               : null}
@@ -878,12 +878,12 @@ console.log(basePools)
   };
 
   onPoolSelectChange = (event) => {
-    const selectedPool = this.state.basePools.find((pool) => {
+    const selectedPool = this.state.pools.find((pool) => {
       return pool.id === event.target.value
     })
-    console.log(event.target)
     const newStateSlice = {
-      basePool: event.target.value,
+      [event.target.name]: event.target.value,
+      // basePool: event.target.value,
       selectedPool,
       ...this.getStateSliceUserBalancesForSelectedPool(selectedPool),
     };
