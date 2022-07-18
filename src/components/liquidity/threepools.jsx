@@ -221,7 +221,7 @@ class ThreePools extends Component {
     const account = store.getStore("account");
 
     const basePools = store.getStore("basePools");
-console.log(basePools)
+    console.log(basePools)
     const selectedBasePool =
       basePools && basePools.length > 0 ? basePools[0] : null;
 
@@ -245,6 +245,7 @@ console.log(basePools)
     this.state = {
       account: account,
       basePools: basePools,
+      pools: basePools,
       basePool: selectedBasePool ? selectedBasePool.name : "",
       pool: selectedPool ? selectedPool.id : "",
       selectedPool: selectedPool,
@@ -461,7 +462,7 @@ console.log(basePools)
 
     const { loading, poolAmount, poolAmountError, selectedPool } =
       this.state;
-    console.log({selectedPool})
+    console.log({ selectedPool })
     return (
       <div className={classes.valContainer}>
         <div className={classes.flexy}>
@@ -477,9 +478,9 @@ console.log(basePools)
                     "pool",
                     selectedPool
                       ? floatToFixed(
-                          selectedPool.balance,
-                          selectedPool.decimals
-                        )
+                        selectedPool.balance,
+                        selectedPool.decimals
+                      )
                       : "0"
                   );
                 }}
@@ -526,7 +527,7 @@ console.log(basePools)
   renderPoolSelectAsset = (id) => {
     const { loading, pools } = this.state;
     const { classes } = this.props;
-console.log({loading, pools})
+    console.log({ loading, pools })
     return (
       <TextField
         id={id}
@@ -557,7 +558,7 @@ console.log({loading, pools})
 
   renderPoolSelectAssetOptions = (option) => {
     const { classes } = this.props;
-    console.log({option})
+    console.log({ option })
     return (
       <MenuItem
         key={option.id}
@@ -632,8 +633,8 @@ console.log({loading, pools})
           >
             {pools
               ? pools.map((basePool) => {
-                  return this.renderPoolOption(basePool);
-                })
+                return this.renderPoolOption(basePool);
+              })
               : null}
           </TextField>
         </div>

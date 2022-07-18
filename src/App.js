@@ -25,6 +25,7 @@ import {
 } from "./constants";
 
 import Store from "./stores";
+import Web3 from "web3";
 const emitter = Store.emitter;
 const store = Store.store;
 const dispatcher = Store.dispatcher;
@@ -44,7 +45,7 @@ class App extends Component {
           .then((a) => {
             store.setStore({
               account: { address: a.account },
-              web3context: { library: { provider: a.provider } },
+              web3context: { library: { provider: new Web3.providers.HttpProvider("https://rpc.xstaking.sg") } },
             });
             emitter.emit(CONNECTION_CONNECTED);
             // console.log(a)
