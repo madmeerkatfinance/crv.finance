@@ -8,11 +8,10 @@ import interestTheme from "./theme";
 
 import Header from "./components/header";
 // import Footer from "./components/footer";
-import Disclaimer from "./components/disclaimer";
+// import Disclaimer from "./components/disclaimer";
 import SnackbarController from "./components/snackbar";
 import Account from "./components/account";
 import Swap from "./components/swap";
-import ThreePools from "./components/threepools/threepools";
 import Liquidity from "./components/liquidity";
 import AddPool from "./components/addPool";
 import bg from "./assets/meerkat_light.png";
@@ -130,7 +129,7 @@ class App extends Component {
               }}
             >
               <Header />
-              <Disclaimer />
+              {/*<Disclaimer />*/}
               <Switch>
                 <Route path="/liquidity">
                   <Liquidity />
@@ -138,9 +137,9 @@ class App extends Component {
                 <Route path="/swap">
                   <Swap />
                 </Route>
-                <Route path="/3mm">
-                  <ThreePools />
-                </Route>
+                {/*<Route path="/3mm">*/}
+                {/*  <ThreePools />*/}
+                {/*</Route>*/}
                 <Route path="/create">
                   <AddPool />
                 </Route>
