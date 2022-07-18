@@ -220,7 +220,7 @@ class Header extends Component {
               </Typography>
             </div>
             {this.renderLink("Swap")}
-            {this.renderLink("3MM")}
+            {/*{this.renderLink("3MM")}*/}
             {this.renderLink("Liquidity")}
             {this.renderLink("Create")}
             <div
