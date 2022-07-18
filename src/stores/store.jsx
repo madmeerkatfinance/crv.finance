@@ -246,10 +246,13 @@ class Store {
         config.erc20ABI,
         asset.erc20address
       )
+      console.log("address", asset.erc20address)
+      console.log("account", account.address)
+      console.log("contract", contract)
       const allowance = await erc20Contract.methods
         .allowance(account.address, contract)
         .call({ from: account.address })
-
+      console.log(allowance);
       let ethAllowance = web3.utils.fromWei(allowance, 'ether')
       if (asset.decimals !== 18) {
         ethAllowance = (allowance * 10 ** asset.decimals).toFixed(0)
@@ -938,8 +941,12 @@ class Store {
     amountToSend,
     callback
   ) => {
+    // const metapoolContract = new web3.eth.Contract(
+    //   pool.liquidityABI,
+    //   pool.liquidityAddress
+    // )
     const metapoolContract = new web3.eth.Contract(
-      pool.liquidityABI,
+      pool.id === 'bcroMM' ? config.basePool2TokenABI : config.basePoolABI,
       pool.liquidityAddress
     )
 
@@ -1017,6 +1024,8 @@ class Store {
     callback
   ) => {
     // If it is bcroMM token, we will use the ABI that utillises 2 tokens
+    console.log("Base pool remove")
+    console.log({pool})
     const basePoolContract = new web3.eth.Contract(
       pool.id === 'bcroMM' ? config.basePool2TokenABI : config.basePoolABI,
       pool.address
@@ -1024,7 +1033,7 @@ class Store {
 
     // remove all ??
     basePoolContract.methods
-      .remove_liquidity(amountToSend, [0, 0, 0])
+      .remove_liquidity(amountToSend, pool.id === 'bcroMM' ? [0, 0] : [0, 0, 0])
       .send({ from: account.address })
       .on('transactionHash', function (hash) {
         emitter.emit(SNACKBAR_TRANSACTION_HASH, hash)
