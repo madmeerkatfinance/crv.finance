@@ -441,7 +441,7 @@ class Store {
 
       let [[symbol], [decimalsResp], [name]] = await this._multicall(config.erc20ABI, calls)
 
-      
+
 
       let balance
       if (pool.id === 'bcroMM' && coinAddress === WCRO_TOKEN) {
@@ -941,37 +941,81 @@ class Store {
     amountToSend,
     callback
   ) => {
-    // const metapoolContract = new web3.eth.Contract(
-    //   pool.liquidityABI,
-    //   pool.liquidityAddress
-    // )
-    const metapoolContract = new web3.eth.Contract(
-      pool.id === 'bcroMM' ? config.basePool2TokenABI : config.basePoolABI,
-      pool.liquidityAddress
-    )
 
     //calcualte minimum amounts ?
 
-    metapoolContract.methods
-      .remove_liquidity(pool.address, amountToSend, [0, 0, 0, 0])
-      .send({ from: account.address })
-      .on('transactionHash', function (hash) {
-        emitter.emit(SNACKBAR_TRANSACTION_HASH, hash)
-        callback(null, hash)
-      })
-      .on('confirmation', function (confirmationNumber, receipt) {
-        if (confirmationNumber === 1) {
-          dispatcher.dispatch({ type: CONFIGURE, content: {} })
-        }
-      })
-      .on('receipt', function (receipt) {
-      })
-      .on('error', function (error) {
-        if (error.message) {
-          return callback(error.message)
-        }
-        callback(error)
-      })
+    if (pool.id === 'MUSD3MM-2') {
+      const metapoolContract = new web3.eth.Contract(
+        pool.liquidityABI,
+        pool.liquidityAddress
+      )
+      metapoolContract.methods
+        .remove_liquidity(pool.address, amountToSend, [0, 0, 0, 0])
+        .send({ from: account.address })
+        .on('transactionHash', function (hash) {
+          emitter.emit(SNACKBAR_TRANSACTION_HASH, hash)
+          callback(null, hash)
+        })
+        .on('confirmation', function (confirmationNumber, receipt) {
+          if (confirmationNumber === 1) {
+            dispatcher.dispatch({ type: CONFIGURE, content: {} })
+          }
+        })
+        .on('receipt', function (receipt) {
+        })
+        .on('error', function (error) {
+          if (error.message) {
+            return callback(error.message)
+          }
+          callback(error)
+        })
+    } else {
+      const metapoolContract = new web3.eth.Contract(
+        pool.id === 'bcroMM' ? config.basePool2TokenABI : config.basePoolABI,
+        pool.address
+      )
+      metapoolContract.methods
+        .remove_liquidity(amountToSend, [0, 0])
+        .send({ from: account.address })
+        .on('transactionHash', function (hash) {
+          emitter.emit(SNACKBAR_TRANSACTION_HASH, hash)
+          callback(null, hash)
+        })
+        .on('confirmation', function (confirmationNumber, receipt) {
+          if (confirmationNumber === 1) {
+            dispatcher.dispatch({ type: CONFIGURE, content: {} })
+          }
+        })
+        .on('receipt', function (receipt) {
+        })
+        .on('error', function (error) {
+          if (error.message) {
+            return callback(error.message)
+          }
+          callback(error)
+        })
+    }
+
+    // metapoolContract.methods
+    //   .remove_liquidity(pool.address, amountToSend, [0, 0, 0, 0])
+    //   .send({ from: account.address })
+    //   .on('transactionHash', function (hash) {
+    //     emitter.emit(SNACKBAR_TRANSACTION_HASH, hash)
+    //     callback(null, hash)
+    //   })
+    //   .on('confirmation', function (confirmationNumber, receipt) {
+    //     if (confirmationNumber === 1) {
+    //       dispatcher.dispatch({ type: CONFIGURE, content: {} })
+    //     }
+    //   })
+    //   .on('receipt', function (receipt) {
+    //   })
+    //   .on('error', function (error) {
+    //     if (error.message) {
+    //       return callback(error.message)
+    //     }
+    //     callback(error)
+    //   })
   }
 
   withdrawBasePool = async (payload) => {
@@ -1025,15 +1069,15 @@ class Store {
   ) => {
     // If it is bcroMM token, we will use the ABI that utillises 2 tokens
     console.log("Base pool remove")
-    console.log({pool})
+    console.log({ pool })
     const basePoolContract = new web3.eth.Contract(
-      pool.id === 'bcroMM' ? config.basePool2TokenABI : config.basePoolABI,
+      pool.id === 'bcroMM' ? config.basePool2TokenABI : pool.id === 'MUSD3MM-2' ? config.metapoolABI : config.basePoolABI,
       pool.address
     )
 
     // remove all ??
     basePoolContract.methods
-      .remove_liquidity(amountToSend, pool.id === 'bcroMM' ? [0, 0] : [0, 0, 0])
+      .remove_liquidity(amountToSend, pool.id === 'bcroMM' || pool.id === "MUSD3MM-2" ? [0, 0] : [0, 0, 0])
       .send({ from: account.address })
       .on('transactionHash', function (hash) {
         emitter.emit(SNACKBAR_TRANSACTION_HASH, hash)
@@ -1076,7 +1120,7 @@ class Store {
       // )
       // console.log(from.index, to.index, amountToSend)
       const amountToReceive = await metapoolContract.methods
-        [pool.id === 'bcroMM' ? "get_dy" : "get_dy_underlying"](from.index, to.index, amountToSend)
+      [pool.id === 'bcroMM' ? "get_dy" : "get_dy_underlying"](from.index, to.index, amountToSend)
         .call()
 
       const receiveAmount = amountToReceive / 10 ** to.decimals
@@ -1120,7 +1164,7 @@ class Store {
           pool.address
         )
         const amountToReceive = await metapoolContract.methods
-          [pool.id === 'bcroMM' ? "get_dy" : "get_dy_underlying"](from.index, to.index, amountToSend)
+        [pool.id === 'bcroMM' ? "get_dy" : "get_dy_underlying"](from.index, to.index, amountToSend)
           .call()
 
         this._callExchange(
@@ -1169,7 +1213,7 @@ class Store {
 
     // console.log(from.index, to.index, amountToSend, receive);
     metapoolContract.methods
-      [pool.id === 'bcroMM' ? "exchange" : "exchange_underlying"](from.index, to.index, amountToSend, receive)
+    [pool.id === 'bcroMM' ? "exchange" : "exchange_underlying"](from.index, to.index, amountToSend, receive)
       .send({ from: account.address, ...(pool.id === 'bcroMM' && from.erc20address === WCRO_TOKEN ? { value: amountToSend } : {}) })
       .on('transactionHash', function (hash) {
         emitter.emit(SNACKBAR_TRANSACTION_HASH, hash)
