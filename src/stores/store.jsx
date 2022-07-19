@@ -696,7 +696,7 @@ class Store {
       const account = store.getStore('account')
       const web3 = await this._getWeb3Provider()
 
-      await Promise.all(
+      const approvals = await Promise.all(
         pool.assets.map((asset, index) => {
           return this._checkApproval2(
             asset,
@@ -706,6 +706,11 @@ class Store {
           );
         })
       );
+      console.log(approvals)
+
+      if (approvals.some(i => !i)) {
+        return emitter.emit(ERROR, new Error('User denied transaction signature!'))
+      }
 
       const amountsBN = amounts.map((amount, index) => {
         let amountToSend = web3.utils.toWei(amount.toString(), 'ether')
@@ -751,6 +756,10 @@ class Store {
           )
         })
       )
+
+      if (approvals.some(i => !i)) {
+        return emitter.emit(ERROR, new Error('User denied transaction signature!'))
+      }
 
       console.log(approvals)
 
