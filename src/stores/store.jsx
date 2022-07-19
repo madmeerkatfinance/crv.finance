@@ -696,6 +696,17 @@ class Store {
       const account = store.getStore('account')
       const web3 = await this._getWeb3Provider()
 
+      await Promise.all(
+        pool.assets.map((asset, index) => {
+          return this._checkApproval2(
+            asset,
+            account,
+            amounts[index],
+            pool.liquidityAddress
+          );
+        })
+      );
+
       const amountsBN = amounts.map((amount, index) => {
         let amountToSend = web3.utils.toWei(amount.toString(), 'ether')
         if (pool.assets[index].decimals !== 18) {
