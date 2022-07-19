@@ -6,6 +6,7 @@ import CloseIcon from "@material-ui/icons/Close";
 
 import { Web3ReactProvider, useWeb3React } from "@web3-react/core";
 import { Web3Provider } from "@ethersproject/providers";
+import { ethers } from 'ethers'
 
 import {
   ERROR,
@@ -165,9 +166,9 @@ class Unlock extends Component {
 }
 
 function getLibrary(provider) {
-  const library = new Web3Provider(provider);
-  // library.pollingInterval = 8000;
-  return library;
+  const library = new ethers.providers.Web3Provider(provider)
+  library.pollingInterval = 12000
+  return library
 }
 
 function onConnectionClicked(
