@@ -45,7 +45,7 @@ class App extends Component {
           .then((a) => {
             store.setStore({
               account: { address: a.account },
-              web3context: { library: { provider: new Web3.providers.HttpProvider("https://rpc.xstaking.sg") } },
+              web3context: { library: { provider: a.provider } },
             });
             emitter.emit(CONNECTION_CONNECTED);
             // console.log(a)
