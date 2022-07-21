@@ -5,7 +5,6 @@ import { Typography, Button, CircularProgress } from "@material-ui/core";
 import CloseIcon from "@material-ui/icons/Close";
 
 import { Web3ReactProvider, useWeb3React } from "@web3-react/core";
-import { Web3Provider } from "@ethersproject/providers";
 import { ethers } from 'ethers'
 
 import {

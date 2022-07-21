@@ -25,7 +25,6 @@ import {
 } from "./constants";
 
 import Store from "./stores";
-import Web3 from "web3";
 const emitter = Store.emitter;
 const store = Store.store;
 const dispatcher = Store.dispatcher;
