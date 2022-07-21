@@ -282,7 +282,6 @@ class Header extends Component {
                 variant={"h4"}
                 className={classes.walletAddress}
                 noWrap
-                onClick={this.addressClicked}
               >
                 {address}
                 <div className={classes.connectedDot}></div>
