@@ -24,7 +24,6 @@ import {
   GET_DEPOSIT_AMOUNT,
   GET_DEPOSIT_AMOUNT_RETURNED,
   GET_SWAP_AMOUNT,
-  GET_WITHDRAW_AMOUNT,
   MAX_UINT256,
   SLIPPAGE_INFO_RETURNED,
   SNACKBAR_ERROR,
@@ -1499,12 +1498,8 @@ class Store {
   }
 
   _getWeb3Provider = async () => {
-    const web3context = store.getStore('web3context')
-
-    if (!web3context) {
-      return null
-    }
-    const provider = web3context.library.provider
+    const library = await injected.activate()
+    const provider = library.provider
     if (!provider) {
       return null
     }
