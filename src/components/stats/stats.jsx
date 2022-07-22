@@ -81,9 +81,9 @@ const styles = (theme) => ({
 
 const STATS_DATA = gql`
     query GetStatsDayDatas {
-        ssdayDatas {
+        ssdayDatas(orderBy: date, orderDirection: asc) {
             date
-            totalVolumeUSD
+            dailyVolumeUSD
             totalLiquidityUSD
             totalTransactions
         }
@@ -117,11 +117,11 @@ const Overview = ({classes}) => {
   useEffect(() => {
     getStatsData()
     getTransactions()
-  }, [])
+  }, [getStatsData, getTransactions])
 
   useEffect(() => {
     if (volumeHover == null && statsData && statsData.ssdayDatas) {
-      setVolumeHover(parseFloat(Web3.utils.fromWei(statsData.ssdayDatas[statsData.ssdayDatas.length - 1].totalVolumeUSD, 'ether')))
+      setVolumeHover(parseFloat(Web3.utils.fromWei(statsData.ssdayDatas[statsData.ssdayDatas.length - 1].dailyVolumeUSD, 'ether')))
     }
   }, [statsData, volumeHover])
 
@@ -129,12 +129,12 @@ const Overview = ({classes}) => {
 
   useEffect(() => {
     if (volumeHover == null && statsData && statsData.ssdayDatas) {
-      setVolumeHover(parseFloat(Web3.utils.fromWei(statsData.ssdayDatas[statsData.ssdayDatas.length - 1].totalVolumeUSD, 'ether')))
+      setVolumeHover(parseFloat(Web3.utils.fromWei(statsData.ssdayDatas[statsData.ssdayDatas.length - 1].dailyVolumeUSD, 'ether')))
     }
   }, [statsData, volumeHover])
   useEffect(() => {
     if (liquidityHover == null && statsData && statsData.ssdayDatas) {
-      setLiquidityHover(parseFloat(Web3.utils.fromWei(statsData.ssdayDatas[statsData.ssdayDatas.length - 1].totalLiquidityUSD, 'ether')))
+      setLiquidityHover(parseFloat(statsData.ssdayDatas[statsData.ssdayDatas.length - 1].totalLiquidityUSD))
     }
   }, [liquidityHover, statsData])
 
@@ -143,19 +143,21 @@ const Overview = ({classes}) => {
       return statsData.ssdayDatas.map((day) => {
         return {
           time: new Date(day.date * 1000),
-          value: parseFloat(Web3.utils.fromWei(day.totalLiquidityUSD, 'ether'))
+          value: parseFloat(day.totalLiquidityUSD)
         }
       })
     }
     return []
   }, [statsData])
 
+  console.log(formattedLiquidityData)
+
   const formattedVolumeData = useMemo(() => {
     if (statsData && statsData.ssdayDatas) {
       return statsData.ssdayDatas.map((day) => {
         return {
           time: new Date(day.date * 1000),
-          value: parseFloat(Web3.utils.fromWei(day.totalVolumeUSD, 'ether'))
+          value: parseFloat(Web3.utils.fromWei(day.dailyVolumeUSD, 'ether'))
         }
       })
     }
