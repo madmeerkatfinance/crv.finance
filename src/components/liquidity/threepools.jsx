@@ -3,7 +3,7 @@ import { withRouter } from "react-router-dom";
 import { withStyles } from "@material-ui/core/styles";
 import PoolSeedingCTA from "../poolSeedingCTA/poolSeedingCTA";
 import { Typography, TextField, MenuItem, Button } from "@material-ui/core";
-import { colors } from "../../theme/theme";
+import { colors } from '../../theme';
 import { Alert } from "@material-ui/lab";
 import TransactionInfo from "../transactionInfo/transactionInfo";
 
@@ -14,20 +14,16 @@ import { floatToFixed } from "../../utils/numbers";
 import {
   ERROR,
   BASE_POOL_CONFIGURE_RETURNED,
-  GET_BALANCES,
   BALANCES_RETURNED,
-  DEPOSIT,
   DEPOSIT_RETURNED,
-  WITHDRAW,
   WITHDRAW_BASE,
   WITHDRAW_RETURNED,
   GET_BASE_DEPOSIT_AMOUNT,
   GET_BASE_DEPOSIT_AMOUNT_RETURNED,
-  GET_WITHDRAW_AMOUNT,
   GET_WITHDRAW_AMOUNT_RETURNED,
   SLIPPAGE_INFO_RETURNED,
   DEPOSIT_BASE_POOL,
-} from "../../constants/constants";
+} from '../../constants';
 
 import Store from "../../stores/store";
 const emitter = Store.emitter;
@@ -225,7 +221,7 @@ class ThreePools extends Component {
     const account = store.getStore("account");
 
     const basePools = store.getStore("basePools");
-
+    console.log(basePools)
     const selectedBasePool =
       basePools && basePools.length > 0 ? basePools[0] : null;
 
@@ -249,6 +245,7 @@ class ThreePools extends Component {
     this.state = {
       account: account,
       basePools: basePools,
+      pools: basePools,
       basePool: selectedBasePool ? selectedBasePool.name : "",
       pool: selectedPool ? selectedPool.id : "",
       selectedPool: selectedPool,
@@ -327,7 +324,7 @@ class ThreePools extends Component {
     return Object.assign(
       {},
       ...selectedPool.assets.map(({ symbol, balance, decimals }) => ({
-        [`${symbol}Amount`]: floatToFixed(0, decimals),
+        [`${symbol}Amount`]: floatToFixed(balance, decimals),
       }))
     );
   };
@@ -398,6 +395,7 @@ class ThreePools extends Component {
       return <div></div>;
     }
 
+
     return (
       <div className={classes.root}>
         <div className={classes.inputContainer}>
@@ -407,12 +405,11 @@ class ThreePools extends Component {
               align="center"
               className={classes.poolInfoHeader}
             >
-              Create 3MM LP
+              Create LP
             </Typography>
             <div style={{ marginBottom: 10 }}></div>
             <Alert icon={false} className={classes.infoAlert}>
-              Add DAI, USDC, and USDT to get 3MM LP. You can stake stablecoin
-              3MM LPs for high APR at{" "}
+              Select a pool that you wish to add liquidity into. You can stake these LPs for high APR at{" "}
               <a
                 href="https://mm.finance/farms"
                 target="_blank"
@@ -463,9 +460,9 @@ class ThreePools extends Component {
   renderPoolSelectInput = () => {
     const { classes } = this.props;
 
-    const { loading, pools, pool, poolAmount, poolAmountError, selectedPool } =
+    const { loading, poolAmount, poolAmountError, selectedPool } =
       this.state;
-
+    console.log({ selectedPool })
     return (
       <div className={classes.valContainer}>
         <div className={classes.flexy}>
@@ -481,9 +478,9 @@ class ThreePools extends Component {
                     "pool",
                     selectedPool
                       ? floatToFixed(
-                          selectedPool.balance,
-                          selectedPool.decimals
-                        )
+                        selectedPool.balance,
+                        selectedPool.decimals
+                      )
                       : "0"
                   );
                 }}
@@ -530,7 +527,7 @@ class ThreePools extends Component {
   renderPoolSelectAsset = (id) => {
     const { loading, pools } = this.state;
     const { classes } = this.props;
-
+    console.log({ loading, pools })
     return (
       <TextField
         id={id}
@@ -543,6 +540,7 @@ class ThreePools extends Component {
           renderValue: (option) => {
             return (
               <div className={classes.assetSelectIconName}>
+                {id}
                 <Typography variant="h4">{option}</Typography>
               </div>
             );
@@ -560,7 +558,7 @@ class ThreePools extends Component {
 
   renderPoolSelectAssetOptions = (option) => {
     const { classes } = this.props;
-
+    console.log({ option })
     return (
       <MenuItem
         key={option.id}
@@ -590,7 +588,7 @@ class ThreePools extends Component {
   };
 
   renderPoolSelect = (id) => {
-    const { loading, basePools, basePool } = this.state;
+    const { loading, pools, basePool, selectedPool } = this.state;
     const { classes } = this.props;
     return (
       <div className={classes.valContainer}>
@@ -621,7 +619,7 @@ class ThreePools extends Component {
                       className={classes.multiAssetSelectIcon}
                     /> */}
                     <div className={classes.assetSelectIconName}>
-                      <Typography variant="h4">{option}</Typography>
+                      <Typography variant="h4">{selectedPool ? selectedPool.name : option}</Typography>
                     </div>
                   </div>
                 );
@@ -633,10 +631,10 @@ class ThreePools extends Component {
             className={classes.actionInput}
             placeholder={"Select"}
           >
-            {basePools
-              ? basePools.map((basePool) => {
-                  return this.renderPoolOption(basePool);
-                })
+            {pools
+              ? pools.map((basePool) => {
+                return this.renderPoolOption(basePool);
+              })
               : null}
           </TextField>
         </div>
@@ -670,7 +668,7 @@ class ThreePools extends Component {
 
   renderDeposit = () => {
     const { classes } = this.props;
-    const { loading, pools, pool, selectedPool } = this.state;
+    const { loading, selectedPool } = this.state;
     console.log("loading", loading);
     return (
       <React.Fragment>
@@ -714,8 +712,6 @@ class ThreePools extends Component {
 
     const { depositAmount = 0, slippagePcent, selectedPool } = this.state;
     // console.log(depositAmount)
-    let amount = depositAmount;
-    if (!depositAmount) amount = 0.0;
     if (selectedPool && !selectedPool.isPoolSeeded) return null;
 
     return (
@@ -772,7 +768,7 @@ class ThreePools extends Component {
 
   renderWithdraw = () => {
     const { classes } = this.props;
-    const { loading, pools, pool } = this.state;
+    const { loading } = this.state;
 
     return (
       <React.Fragment>
@@ -884,21 +880,22 @@ class ThreePools extends Component {
   };
 
   onPoolSelectChange = (event) => {
-    // const selectedPool = this.state.basePools.find((pool) => {
-    //   return pool.id === event.target.value
-    // })
-    // const newStateSlice = {
-    //   [event.target.name]: event.target.value,
-    //   selectedPool,
-    //   ...this.getStateSliceUserBalancesForSelectedPool(selectedPool),
-    // };
-    // this.setState(newStateSlice);
-    // this.getDepositAmount(newStateSlice);
-    // // If an url fragment was used to auto-select a pool, remove that
-    // // fragment when we change pool to revert to the naked /liquidity url.
-    // if (this.props.history.location.hash !== '') {
-    //   this.props.history.replace('/liquidity');
-    // }
+    const selectedPool = this.state.pools.find((pool) => {
+      return pool.id === event.target.value
+    })
+    const newStateSlice = {
+      [event.target.name]: event.target.value,
+      // basePool: event.target.value,
+      selectedPool,
+      ...this.getStateSliceUserBalancesForSelectedPool(selectedPool),
+    };
+    this.setState(newStateSlice);
+    this.getDepositAmount(newStateSlice);
+    // If an url fragment was used to auto-select a pool, remove that
+    // fragment when we change pool to revert to the naked /liquidity url.
+    if (this.props.history.location.hash !== '') {
+      this.props.history.replace('/liquidity');
+    }
   };
 
   onChange = (event) => {
@@ -925,7 +922,7 @@ class ThreePools extends Component {
 
     this.setState({ activeTab: "deposit", poolAmount: "" });
 
-    let { pools, pool, selectedPool } = this.state;
+    let { pools, selectedPool } = this.state;
 
     if (!selectedPool) {
       return false;
@@ -994,7 +991,7 @@ class ThreePools extends Component {
   };
 
   onDeposit = () => {
-    const { pool, pools, selectedPool } = this.state;
+    const { selectedPool } = this.state;
 
     let error = false;
 
@@ -1018,7 +1015,7 @@ class ThreePools extends Component {
   onWithdraw = () => {
     this.setState({ poolAmountError: false });
 
-    const { poolAmount, pool, pools, selectedPool } = this.state;
+    const { poolAmount, selectedPool } = this.state;
 
     if (
       !poolAmount ||

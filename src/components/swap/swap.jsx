@@ -242,7 +242,7 @@ const styles = (theme) => ({
 
 class Swap extends Component {
   constructor(props) {
-    super();
+    super(props);
 
     const account = store.getStore("account");
     const pools = store.getStore("pools");
@@ -254,11 +254,11 @@ class Swap extends Component {
       selectedPool: selectedPool,
       fromAsset:
         selectedPool && selectedPool.assets.length > 0
-          ? selectedPool.assets[0].symbol
+          ? selectedPool.assets[2].symbol
           : "",
       toAsset:
         selectedPool && selectedPool.assets.length > 0
-          ? selectedPool.assets[1].symbol
+          ? selectedPool.assets[0].symbol
           : "",
       account: account,
       fromAmount: "",
@@ -292,11 +292,13 @@ class Swap extends Component {
 
   configureReturned = () => {
     const pools = store.getStore("pools");
+    const basePools = store.getStore("basePools");
     const selectedPool = pools && pools.length > 0 ? pools[0] : null;
-
+    console.log([pools[0], basePools[1]])
     this.setState({
       account: store.getStore("account"),
-      pools: pools,
+      // This is special logic to ensure we only take MUSD-3MM pool & bCRO-CRO pool (in future we can relax this)
+      pools: [pools[0], basePools[1]],
       pool: selectedPool ? selectedPool.id : "",
       selectedPool: selectedPool,
       fromAsset:
@@ -327,11 +329,11 @@ class Swap extends Component {
       selectedPool: selectedPool,
       fromAsset:
         selectedPool && selectedPool.assets.length > 0
-          ? selectedPool.assets[0].symbol
+          ? selectedPool.assets[2].symbol
           : "",
       toAsset:
         selectedPool && selectedPool.assets.length > 0
-          ? selectedPool.assets[1].symbol
+          ? selectedPool.assets[0].symbol
           : "",
     });
   };
@@ -531,7 +533,7 @@ class Swap extends Component {
   renderAssetInput = (type) => {
     const { classes } = this.props;
 
-    const { loading, pools, selectedPool } = this.state;
+    const { loading, selectedPool } = this.state;
 
     const that = this;
 
@@ -692,11 +694,11 @@ class Swap extends Component {
     const selectedPool = this.state.pools.find((pool) => {
       return pool.id === event.target.value;
     });
-
+    console.log(selectedPool);
     //on change pool change assets as well
     this.setState({
-      fromAsset: selectedPool.assets[0].symbol,
-      toAsset: selectedPool.assets[1].symbol,
+      fromAsset: selectedPool.assets[selectedPool.assets.length-1].symbol,
+      toAsset: selectedPool.assets[0].symbol,
       selectedPool,
       toAmount: "",
       receivePerSend: "",
@@ -714,10 +716,6 @@ class Swap extends Component {
     let val = {};
     val[event.target.name] = event.target.value;
     this.setState(val);
-
-    const { pools, pool, selectedPool } = this.state;
-
-    const value = event.target.value;
 
     const that = this;
 
@@ -741,7 +739,7 @@ class Swap extends Component {
   };
 
   _getSwapAmount = () => {
-    const { fromAsset, toAsset, pool, pools, selectedPool, fromAmount } =
+    const { fromAsset, toAsset, selectedPool, fromAmount } =
       this.state;
 
     if (!selectedPool.isPoolSeeded) return;
@@ -778,7 +776,7 @@ class Swap extends Component {
   onSwap = () => {
     this.setState({ fromAmountError: false });
 
-    const { fromAsset, toAsset, pool, pools, selectedPool, fromAmount } =
+    const { fromAsset, toAsset, selectedPool, fromAmount } =
       this.state;
 
     const from = selectedPool.assets.filter((asset) => {

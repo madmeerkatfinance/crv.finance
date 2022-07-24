@@ -5,7 +5,7 @@ import { Typography, Button, CircularProgress } from "@material-ui/core";
 import CloseIcon from "@material-ui/icons/Close";
 
 import { Web3ReactProvider, useWeb3React } from "@web3-react/core";
-import { Web3Provider } from "@ethersproject/providers";
+import { ethers } from 'ethers'
 
 import {
   ERROR,
@@ -13,6 +13,7 @@ import {
   CONNECTION_CONNECTED,
 } from "../../constants";
 
+import { useEagerConnect } from "./hooks";
 import Store from "../../stores";
 const emitter = Store.emitter;
 const store = Store.store;
@@ -164,9 +165,9 @@ class Unlock extends Component {
 }
 
 function getLibrary(provider) {
-  const library = new Web3Provider(provider);
-  library.pollingInterval = 8000;
-  return library;
+  const library = new ethers.providers.Web3Provider(provider)
+  library.pollingInterval = 12000
+  return library
 }
 
 function onConnectionClicked(
@@ -226,7 +227,7 @@ function MyComponent(props) {
   // }, [active, storeContext]);
 
   // handle logic to eagerly connect to the injected ethereum provider, if it exists and has granted access already
-  // const triedEager = useEagerConnect();
+  const triedEager = useEagerConnect();
 
   // handle logic to connect in reaction to certain events on the injected ethereum provider, if it exists
   // useInactiveListener(!triedEager || !!activatingConnector);

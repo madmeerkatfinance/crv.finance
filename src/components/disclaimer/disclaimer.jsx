@@ -1,8 +1,5 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { withStyles } from '@material-ui/core/styles';
-import {
-  Typography
-} from '@material-ui/core';
 import { withRouter } from "react-router-dom";
 import { colors } from '../../theme'
 
@@ -26,23 +23,12 @@ const styles = theme => ({
   }
 });
 
-class Disclaimer extends Component {
-
-  constructor(props) {
-    super()
-
-    this.state = {}
-  }
-
-  render() {
-    const { classes } = this.props;
-
-    return (
-      <div className={ classes.root }>
-        {/* <Typography variant={'h5'} className={ classes.disclaimer }>This project is in beta. Use at your own risk.</Typography> */}
-      </div>
-    )
-  }
+const Disclaimer = ({ classes }) => {
+  return (
+    <div className={ classes.root }>
+      {/* <Typography variant={'h5'} className={ classes.disclaimer }>This project is in beta. Use at your own risk.</Typography> */}
+    </div>
+  )
 }
 
 export default withRouter(withStyles(styles)(Disclaimer));
