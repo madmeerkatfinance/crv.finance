@@ -18,7 +18,8 @@ const styles = (theme) => ({
     width: '100%',
     maxWidth: '1200px',
     marginLeft: 'auto',
-    marginRight: 'auto'
+    marginRight: 'auto',
+    marginTop: '30px'
   },
   chartContainer: {
     lineHeight: '1',
