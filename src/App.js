@@ -19,7 +19,7 @@ import Stats from "./components/stats";
 import bg from "./assets/meerkat_light.png";
 
 import { injected } from "./stores/connectors";
-import apolloClient from './config/apolloClient'
+import { bscClient } from './config/apolloClient'
 
 import {
   CONNECTION_CONNECTED,
@@ -95,7 +95,7 @@ class App extends Component {
     const { account } = this.state;
 
     return (
-      <ApolloProvider client={apolloClient}>
+      <ApolloProvider client={bscClient}>
         <MuiThemeProvider theme={createTheme(interestTheme)}>
           <CssBaseline />
           <IpfsRouter>

@@ -1,7 +1,7 @@
 
 const BASE_EXPLORER_URLS = {
-  [25]: 'https://cronoscan.com/',
-  [338]: 'https://cronos.crypto.org/explorer/testnet3',
+  25: 'https://cronoscan.com/',
+  338: 'https://cronos.crypto.org/explorer/testnet3',
 }
 
 export function getBscScanLink(
