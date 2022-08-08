@@ -167,11 +167,12 @@ const Overview = ({ classes }) => {
     if (croPrices && croPrices.pairDayDatas) {
       return croPrices.pairDayDatas.reduce((result, price) => ({
         ...result,
-        [price.date]: parseFloat(price.reserve0) / parseFloat(price.reserve1)
+        [price.date]: parseFloat(price.reserve1) / parseFloat(price.reserve0)
       }), {})
     }
     return {}
   }, [croPrices])
+  console.log(formattedCROPrice)
 
   const formattedStableSwapCro = useMemo(() => {
     if (stableSwapCroStats && stableSwapCroStats.ssdayDatas) {
