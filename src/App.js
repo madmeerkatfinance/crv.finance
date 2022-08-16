@@ -3,6 +3,7 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import { createTheme, MuiThemeProvider } from "@material-ui/core/styles";
 import { Switch, Route } from "react-router-dom";
 import IpfsRouter from "ipfs-react-router";
+import { ApolloProvider } from "@apollo/client";
 
 import interestTheme from "./theme";
 
@@ -14,9 +15,11 @@ import Account from "./components/account";
 import Swap from "./components/swap";
 import Liquidity from "./components/liquidity";
 import AddPool from "./components/addPool";
+import Stats from "./components/stats";
 import bg from "./assets/meerkat_light.png";
 
 import { injected } from "./stores/connectors";
+import { bscClient } from './config/apolloClient'
 
 import {
   CONNECTION_CONNECTED,
@@ -92,66 +95,67 @@ class App extends Component {
     const { account } = this.state;
 
     return (
-      <MuiThemeProvider theme={createTheme(interestTheme)}>
-        <CssBaseline />
-        <IpfsRouter>
-          {!account && (
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                minHeight: "100vh",
-                minWidth: "100vw",
-                justifyContent: "center",
-                alignItems: "center",
-                backgroundPosition: "0 20vh",
-                backgroundImage: `url(${bg})`,
-                backgroundRepeat: "no-repeat",
-                backgroundSize: "cover",
-                backgroundColor: "black",
-              }}
-            >
-              <Account />
-            </div>
-          )}
-          {account && (
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                minHeight: "100vh",
-                alignItems: "center",
-                backgroundPosition: "0 20vh",
-                backgroundImage: `url(${bg})`,
-                backgroundRepeat: "no-repeat",
-                backgroundSize: "cover",
-                backgroundColor: "black",
-              }}
-            >
-              <Header />
-              {/*<Disclaimer />*/}
-              <Switch>
-                <Route path="/liquidity">
-                  <Liquidity />
-                </Route>
-                <Route path="/swap">
-                  <Swap />
-                </Route>
-                {/*<Route path="/3mm">*/}
-                {/*  <ThreePools />*/}
-                {/*</Route>*/}
-                <Route path="/create">
-                  <AddPool />
-                </Route>
-                <Route path="/">
-                  <Swap />
-                </Route>
-              </Switch>
-            </div>
-          )}
-          <SnackbarController />
-        </IpfsRouter>
-      </MuiThemeProvider>
+      <ApolloProvider client={bscClient}>
+        <MuiThemeProvider theme={createTheme(interestTheme)}>
+          <CssBaseline />
+          <IpfsRouter>
+            {!account && (
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  minHeight: "100vh",
+                  minWidth: "100vw",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  backgroundPosition: "0 20vh",
+                  backgroundImage: `url(${bg})`,
+                  backgroundRepeat: "no-repeat",
+                  backgroundSize: "cover",
+                  backgroundColor: "black",
+                }}
+              >
+                <Account />
+              </div>
+            )}
+            {account && (
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  minHeight: "100vh",
+                  alignItems: "center",
+                  backgroundPosition: "0 20vh",
+                  backgroundImage: `url(${bg})`,
+                  backgroundRepeat: "no-repeat",
+                  backgroundSize: "cover",
+                  backgroundColor: "black",
+                }}
+              >
+                <Header />
+                <Switch>
+                  <Route path="/liquidity">
+                    <Liquidity />
+                  </Route>
+                  <Route path="/swap">
+                    <Swap />
+                  </Route>
+                  <Route path="/stats">
+                    <Stats />
+                  </Route>
+                  <Route path="/create">
+                    <AddPool />
+                  </Route>
+                  <Route path="/">
+                    <Swap />
+                  </Route>
+                </Switch>
+              </div>
+            )}
+            <SnackbarController />
+          </IpfsRouter>
+        </MuiThemeProvider>
+      </ApolloProvider>
     );
   }
 }

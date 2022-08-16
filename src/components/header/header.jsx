@@ -223,6 +223,7 @@ class Header extends Component {
             {/*{this.renderLink("3MM")}*/}
             {this.renderLink("Liquidity")}
             {this.renderLink("Create")}
+            {this.renderLink("Stats")}
             <div
               className={classes.link}
               onClick={() => {
