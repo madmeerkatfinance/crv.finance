@@ -256,7 +256,7 @@ class Header extends Component {
                 height="28px"
                 className={classes.socials}
                 onClick={() => {
-                  window.open("https://discord.gg/madmeerkat", "_blank");
+                  window.open("https://discord.gg/madmeerkatnft", "_blank");
                 }}
               />
               <img
