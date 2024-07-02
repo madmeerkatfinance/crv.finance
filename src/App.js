@@ -98,6 +98,16 @@ class App extends Component {
       <ApolloProvider client={bscClient}>
         <MuiThemeProvider theme={createTheme(interestTheme)}>
           <CssBaseline />
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '0.5rem',
+            color: 'black',
+            backgroundColor: 'rgb(245, 158, 11)',
+          }}>
+            Please withdraw your assets from the platform and convert it into MMF tokens before 7th July 2024.
+          </div>
           <IpfsRouter>
             {!account && (
               <div
